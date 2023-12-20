@@ -1,0 +1,2 @@
+- continue implementing the fluentApi for the Entites
+the one you were on was for the user-entity
