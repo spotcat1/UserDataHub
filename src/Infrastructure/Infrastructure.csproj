@@ -10,7 +10,6 @@
     <Folder Include="CrossCutting\Logs\" />
     <Folder Include="Handlers\" />
     <Folder Include="Persistants\Migrations\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

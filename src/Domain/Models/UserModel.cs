@@ -27,7 +27,7 @@ namespace Domain.Models
 
 
 
-        public required GenderModel Gender { get; set; }
+        public  GenderModel Gender { get; set; }
         public ICollection<CarModel> CarModels { get; set; }
 
         public ICollection<UserCompanyModelJunk> UserCompanyModelJunks { get; set; }
