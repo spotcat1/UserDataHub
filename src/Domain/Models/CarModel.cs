@@ -14,6 +14,7 @@ namespace Domain.Models
 
         public double Price { get; set; }
 
+        public string? ImagePath { get; set; }
         public bool IsDeleted { get; set; }
 
 
