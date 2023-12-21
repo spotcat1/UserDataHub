@@ -23,16 +23,6 @@ namespace Application.Services.Implementations
         public async Task<Guid> AddUser(AddUpdateUserDto dto)
         {
 
-            dto.FirstName = RemoveSpaces(dto.FirstName);
-            dto.LastName = RemoveSpaces(dto.LastName);
-            dto.Identitycode = RemoveSpaces(dto.Identitycode);
-
-            if (dto.Nationality != null)
-            {
-                dto.Nationality = RemoveSpaces(dto.Nationality);
-            }
-            
-
 
             var ValidationResult = _validator.Validate(dto);
 
@@ -41,7 +31,17 @@ namespace Application.Services.Implementations
                 throw new Exception(string.Join(",", ValidationResult.Errors.Select(x => x.ErrorMessage)));
             }
 
-            
+
+
+            dto.FirstName = RemoveSpaces(dto.FirstName);
+            dto.LastName = RemoveSpaces(dto.LastName);
+            dto.Identitycode = RemoveSpaces(dto.Identitycode);
+
+            if (dto.Nationality != null)
+            {
+                dto.Nationality = RemoveSpaces(dto.Nationality);
+            }
+       
 
             var UserInstanceModel = new UserModel
             {

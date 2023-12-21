@@ -25,6 +25,8 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
 
+          
+
         }
 
 
@@ -58,7 +60,7 @@ namespace Infrastructure.Repositories
             {
 
                 string FileExtension = Path.GetExtension(Path.GetFileName(userModel.ImageFile.FileName));
-                string NewFileName = $"user/{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
+                string NewFileName = $"user_{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
                 var FilePath = Path.Combine(UploadRootPath, NewFileName);
                 using (var FileStream = new FileStream(FilePath, FileMode.Create))
                 {
@@ -71,6 +73,17 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id;
+        }
+
+
+        public async Task<bool> ReservedIdentityCode(string identitycode)
+        {
+            return await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted);
+        }
+
+        public async Task<bool> GenderExistance(Guid genderId)
+        {
+            return await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿
 
+using Application.Contracts;
 using FluentValidation;
 using Infrastructure.CrossCutting.Validations.UserValidation;
 using Infrastructure.Persistants;
+using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -19,6 +21,8 @@ namespace Infrastructure
 
             ValidatorOptions.Global.LanguageManager = new UserValidatorFluentCustomLanguage();
 
+            services.AddScoped<IUserRepository,UserRepository>();
+            
             services.AddAutoMapper(Assembly.GetExecutingAssembly());   
             
             return services;

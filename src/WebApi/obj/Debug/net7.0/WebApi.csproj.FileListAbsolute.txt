@@ -80,3 +80,10 @@ C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\obj\Debug\net7.0\refint\
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\obj\Debug\net7.0\WebApi.pdb
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\obj\Debug\net7.0\WebApi.genruntimeconfig.cache
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\obj\Debug\net7.0\ref\WebApi.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\WebApi.staticwebassets.runtime.json
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\AutoMapper.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentValidation.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentValidation.AspNetCore.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Versioning.dll
