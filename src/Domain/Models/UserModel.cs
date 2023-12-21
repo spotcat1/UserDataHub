@@ -1,5 +1,6 @@
 ﻿
 using Domain.Commons;
+using Microsoft.AspNetCore.Http;
 
 namespace Domain.Models
 {
@@ -17,7 +18,7 @@ namespace Domain.Models
 
         public DateTime BirthDate { get; set; }
 
-        public string? ImagePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
         public string? Nationality { get; set; }
 

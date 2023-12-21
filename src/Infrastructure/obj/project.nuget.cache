@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "o446G6nUAmA6HygrZS2ZeWS44D9tBmpa4LAhY0hmR9W53m2uEmd3zlqVi2dKz6uI1CXzPYJId8PrOdmW9ymEvg==",
+  "dgSpecHash": "EZ5Ue5HnoBBb/7cS1cbbD/GXcvMjHDyIIk/f5ywIblN4wxZ8Mn3ccMmS4KLNLOkd8VN4gGR+/hqBOsQGfkzw4A==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\fluentvalidation\\11.8.1\\fluentvalidation.11.8.1.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.8.1\\fluentvalidation.dependencyinjectionextensions.11.8.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",

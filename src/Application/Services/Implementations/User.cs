@@ -41,12 +41,7 @@ namespace Application.Services.Implementations
                 throw new Exception(string.Join(",", ValidationResult.Errors.Select(x => x.ErrorMessage)));
             }
 
-            string ImageContentToString = null;
-
-            if (dto.ImageFile != null && dto.ImageFile.Length != 0)
-            {
-                ImageContentToString = await ConvertIFormFileToStringAsync(dto.ImageFile);
-            }
+            
 
             var UserInstanceModel = new UserModel
             {
@@ -55,7 +50,7 @@ namespace Application.Services.Implementations
                 LastName = dto.LastName,
                 IdentityCode = dto.Identitycode,
                 BirthDate = dto.BirthDate,
-                ImagePath = ImageContentToString,
+                ImageFile = dto.ImageFile,
                 Nationality = dto.Nationality,
 
             };
@@ -74,17 +69,6 @@ namespace Application.Services.Implementations
             return input.Replace(" ", "");
         }
 
-        private async Task<string> ConvertIFormFileToStringAsync(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            using (var reader = new StreamReader(file.OpenReadStream()))
-            {
-                return await reader.ReadToEndAsync();
-            }
-        }
+       
     }
 }
