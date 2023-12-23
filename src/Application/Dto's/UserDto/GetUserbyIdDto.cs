@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Dto_s.UserDto
 {
-    public class GetUserbyId
+    public class GetUserbyIdDto
     {
         public Guid GenderId { get; set; }
         public required string FirstName { get; set; }

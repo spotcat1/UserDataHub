@@ -16,5 +16,7 @@ namespace Application.Contracts
         Task<bool> GenderExistance(Guid genderId);
 
         Task<bool> UserExistance(Guid UserId);
+
+        Task<UserModel> GetUserById(Guid Id);
     }
 }

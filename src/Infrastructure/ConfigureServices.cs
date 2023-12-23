@@ -23,8 +23,11 @@ namespace Infrastructure
 
             services.AddScoped<IUserRepository,UserRepository>();
             
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());   
             
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddHttpContextAccessor();
+
             return services;
         }
     }

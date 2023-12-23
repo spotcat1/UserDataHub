@@ -1,10 +1,13 @@
 ﻿using Application.Contracts;
 using Application.Dto_s.UserDto;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Persistants;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
@@ -18,15 +21,15 @@ namespace Infrastructure.Repositories
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private const string ImagePath = "images/user";
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserRepository(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        public UserRepository(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment,
+             IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
-
-          
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -156,6 +159,50 @@ namespace Infrastructure.Repositories
             {
                 File.Delete(imagepath);
             }
+        }
+
+        public async Task<UserModel> GetUserById(Guid Id)
+        {
+            var UserToReturn = _context.UserEntities
+                .AsNoTracking() // so the DB does not track the entity because we want to modify the ImagePath
+                .FirstOrDefault(x=>x.Id==Id && !x.IsDeleted);
+
+
+            if (UserToReturn == null)
+            {
+                return null;
+            }
+
+
+
+            var UserToReturnMapped = new UserModel
+            {
+
+                GenderId = UserToReturn.GenderId,
+                FirstName = UserToReturn.FirstName,
+                LastName = UserToReturn.LastName,
+                IdentityCode = UserToReturn.IdentityCode,
+                BirthDate = UserToReturn.BirthDate,
+                ImageId = UserToReturn.ImagePath,
+                Nationality = UserToReturn.Nationality,
+            };
+
+            
+
+            if (UserToReturnMapped.ImageId != null)
+            {
+                UserToReturnMapped.ImageId = BuildAbsoluteUrl(UserToReturnMapped.ImageId);
+            }
+
+            return UserToReturnMapped;
+        }
+
+
+        private string BuildAbsoluteUrl(string relativeImagePath)
+        {
+            var absoluteUrl = new Uri(_httpContextAccessor.HttpContext.Request.GetDisplayUrl());
+            var baseUrl = $"{absoluteUrl.GetLeftPart(UriPartial.Authority)}";
+            return $"{baseUrl}{relativeImagePath}";
         }
     }
 }

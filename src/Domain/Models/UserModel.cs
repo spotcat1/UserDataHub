@@ -19,6 +19,7 @@ namespace Domain.Models
         public DateTime BirthDate { get; set; }
 
         public IFormFile? ImageFile { get; set; }
+        public string? ImageId { get; set; }    
 
         public string? Nationality { get; set; }
 

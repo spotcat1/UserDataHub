@@ -61,7 +61,7 @@ namespace Application.Services.Implementations
             return await _userRepository.AddUser(UserInstanceModel);
         }
 
-        public Task<string> UpdateUser(Guid id, AddUpdateUserDto dto)
+        public async Task<string> UpdateUser(Guid id, AddUpdateUserDto dto)
         {
             var ValidationResult = _validator.Validate(dto);
 
@@ -94,7 +94,7 @@ namespace Application.Services.Implementations
             };
 
 
-            return _userRepository.UpdateUser(id,UserInstanceModel);
+            return await _userRepository.UpdateUser(id,UserInstanceModel);
 
 
         }
@@ -106,6 +106,22 @@ namespace Application.Services.Implementations
             return input.Replace(" ", "");
         }
 
-       
+        public async Task<GetUserbyIdDto> GetUserById(Guid id)
+        {
+            var UserToReturn = await _userRepository.GetUserById(id);
+
+            var UserToReturnDto = new GetUserbyIdDto
+            {
+                GenderId = UserToReturn.GenderId,   
+                FirstName = UserToReturn.FirstName,
+                LastName = UserToReturn.LastName,
+                BirthDate= UserToReturn.BirthDate,
+                Identitycode = UserToReturn.IdentityCode,
+                Nationality = UserToReturn.Nationality,
+                ImageFile = UserToReturn.ImageId, 
+            };
+
+            return UserToReturnDto;
+        }
     }
 }

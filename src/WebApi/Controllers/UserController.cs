@@ -76,5 +76,22 @@ namespace WebApi.Controllers
 
             return Ok(await _user.UpdateUser(id, dto));
         }
+
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        
+        public async Task<ActionResult<AddUpdateUserDto>> GetUserByIdV1([FromRoute] Guid id)
+        {
+            var Result = await _user.GetUserById(id);
+            
+            if (Result == null)
+            {
+                return BadRequest("کاربر یافت نشد");
+            }
+
+            return Ok(Result);
+        }
     }
 }

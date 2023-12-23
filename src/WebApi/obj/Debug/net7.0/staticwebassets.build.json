@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "62J4QKae/yV+rPm3AwuQw4K6OHvDkdwta0Y792wqNeY=",
+  "Hash": "LzOpu5YCzBzsyF7LtRfLBAzLZOEw/QKfKjjSm2TdE8g=",
   "Source": "WebApi",
   "BasePath": "_content/WebApi",
   "Mode": "Default",
@@ -16,6 +16,23 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\WebApi\\wwwroot\\images\\user\\user_a1bb8fc32a7745708110f0386288cd99.png",
+      "SourceId": "WebApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\WebApi\\wwwroot\\",
+      "BasePath": "_content/WebApi",
+      "RelativePath": "images/user/user_a1bb8fc32a7745708110f0386288cd99.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\user\\user_a1bb8fc32a7745708110f0386288cd99.png"
+    },
     {
       "Identity": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\WebApi\\wwwroot\\images\\user\\user_b5f61a4e9aad43108ec49b290d5d23df.png",
       "SourceId": "WebApi",

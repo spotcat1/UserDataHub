@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\WebApi\\wwwroot\\images\\user\\user_a1bb8fc32a7745708110f0386288cd99.png",
+      "PackagePath": "staticwebassets\\images\\user\\user_a1bb8fc32a7745708110f0386288cd99.png"
+    },
+    {
       "Id": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\WebApi\\wwwroot\\images\\user\\user_b5f61a4e9aad43108ec49b290d5d23df.png",
       "PackagePath": "staticwebassets\\images\\user\\user_b5f61a4e9aad43108ec49b290d5d23df.png"
     },
