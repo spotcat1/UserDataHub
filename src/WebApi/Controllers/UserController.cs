@@ -109,5 +109,21 @@ namespace WebApi.Controllers
 
             return Ok(Result);
         }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<ActionResult<string>> SoftDeleteUserV1([FromRoute] Guid id)
+        {
+            var Result = await _userRepository.SoftDeleteUser(id);    
+
+            if (Result == null)
+            {
+                return NotFound("کاربر برای حدف منطقی یافت نشد");
+            }
+
+            return Ok(Result);
+        }
     }
 }

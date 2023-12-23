@@ -236,6 +236,21 @@ namespace Infrastructure.Repositories
             return $"{baseUrl}{relativeImagePath}";
         }
 
-      
+        public async Task<string> SoftDeleteUser(Guid id)
+        {
+            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (UserToDelete == null)
+            {
+                return null;
+            }
+
+            UserToDelete.IsDeleted = true;
+
+            await _context.SaveChangesAsync();
+
+            return "کاربر با موفقیت حذف منطقی شد";
+
+        }
     }
 }
