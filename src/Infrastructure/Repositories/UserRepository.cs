@@ -130,6 +130,10 @@ namespace Infrastructure.Repositories
                         DeleteImage(foundUserToUpdate.ImagePath);
                     }
                 }
+                else
+                {
+                    foundUserToUpdate.ImagePath = foundUserToUpdate.ImagePath;
+                }
 
                 foundUserToUpdate.GenderId = userModel.GenderId;
                 foundUserToUpdate.FirstName = userModel.FirstName;
@@ -163,9 +167,9 @@ namespace Infrastructure.Repositories
 
         public async Task<UserModel> GetUserById(Guid Id)
         {
-            var UserToReturn = _context.UserEntities
+            var UserToReturn = await _context.UserEntities
                 .AsNoTracking() // so the DB does not track the entity because we want to modify the ImagePath
-                .FirstOrDefault(x=>x.Id==Id && !x.IsDeleted);
+                .FirstOrDefaultAsync(x=>x.Id==Id && !x.IsDeleted);
 
 
             if (UserToReturn == null)
@@ -194,7 +198,34 @@ namespace Infrastructure.Repositories
                 UserToReturnMapped.ImageId = BuildAbsoluteUrl(UserToReturnMapped.ImageId);
             }
 
-            return UserToReturnMapped;
+            return  UserToReturnMapped;
+        }
+
+
+        public async Task<List<UserModel>> GetAllUsers()
+        {
+            var UsersToReturn = await _context.UserEntities.AsNoTracking().Where(x=>!x.IsDeleted)
+                .ToListAsync();
+
+            if (UsersToReturn == null)
+            {
+                return null;
+            }
+
+
+            var UsersMapped = _mapper.Map<List<UserModel>>(UsersToReturn);
+           
+            
+
+            foreach (var property in UsersMapped)
+            {
+                if (property.ImageId !=null)
+                {
+                    property.ImageId = BuildAbsoluteUrl(property.ImageId);  
+                }
+            }
+
+            return UsersMapped;
         }
 
 
@@ -204,5 +235,7 @@ namespace Infrastructure.Repositories
             var baseUrl = $"{absoluteUrl.GetLeftPart(UriPartial.Authority)}";
             return $"{baseUrl}{relativeImagePath}";
         }
+
+      
     }
 }

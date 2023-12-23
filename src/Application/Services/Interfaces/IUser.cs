@@ -10,5 +10,7 @@ namespace Application.Services.Interfaces
         Task<string> UpdateUser(Guid id, AddUpdateUserDto dto);
 
         Task<GetUserbyIdDto> GetUserById(Guid id);
+
+        Task<List<GetAllUsersDto>> GetAllUsers();
     }
 }

@@ -123,5 +123,28 @@ namespace Application.Services.Implementations
 
             return UserToReturnDto;
         }
+
+        public async Task<List<GetAllUsersDto>> GetAllUsers()
+        {
+            var UsersToReturn = await _userRepository.GetAllUsers();
+            var listOfUsersDto = new List<GetAllUsersDto>();
+            foreach (var user in UsersToReturn)
+            {
+                var Users = new GetAllUsersDto()
+                {
+                    Id = user.Id,
+                    Genderid = user.GenderId,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    BirthDate = user.BirthDate,
+                    Identitycode = user.IdentityCode,
+                    Nationality = user.Nationality,
+                    ImageFile = user.ImageId,
+                };
+                listOfUsersDto.Add(Users);
+            }
+
+            return listOfUsersDto;
+        }
     }
 }

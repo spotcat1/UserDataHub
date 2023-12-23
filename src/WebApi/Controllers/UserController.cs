@@ -93,5 +93,21 @@ namespace WebApi.Controllers
 
             return Ok(Result);
         }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<List<GetAllUsersDto>>> GetAllUsersV1()
+        {
+            var Result = await _user.GetAllUsers();
+
+            if (Result == null)
+            {
+                return BadRequest("کاربری برای نمایش وجود ندارد");
+            }
+
+            return Ok(Result);
+        }
     }
 }

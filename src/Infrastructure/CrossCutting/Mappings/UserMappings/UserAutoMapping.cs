@@ -12,7 +12,9 @@ namespace Infrastructure.CrossCutting.Mappings.UserMappings
             CreateMap<UserModel, UserEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
-            CreateMap<UserEntity, UserModel>();
+            CreateMap<UserEntity, UserModel>()
+                .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.ImagePath))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

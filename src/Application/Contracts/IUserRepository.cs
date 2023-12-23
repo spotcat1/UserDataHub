@@ -18,5 +18,9 @@ namespace Application.Contracts
         Task<bool> UserExistance(Guid UserId);
 
         Task<UserModel> GetUserById(Guid Id);
+
+        Task<List<UserModel>> GetAllUsers();
+
+        Task<string> SoftDeleteUser();
     }
 }
