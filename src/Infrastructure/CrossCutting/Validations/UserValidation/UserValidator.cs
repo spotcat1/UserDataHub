@@ -27,7 +27,7 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
                 .Matches("^[a-zA-Zآ-ِی]*$")
                 .WithName("نام خانوادگی");
 
-            RuleFor(x => x.Identitycode)
+            RuleFor(x => x.IdentityCode)
                 .NotEmpty()
                 .Length(11)
                 .Matches("^[0-9]*$")

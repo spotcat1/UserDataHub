@@ -1,7 +1,6 @@
 ﻿using Application.Contracts;
 using Application.Dto_s.UserDto;
 using Application.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -23,6 +22,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK,Type =typeof(Guid))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         public async Task<ActionResult<Guid>> AddUserV1([FromForm]AddUpdateUserDto dto)
         {
@@ -30,18 +30,51 @@ namespace WebApi.Controllers
 
             if (!ExistGender)
             {
-                return BadRequest("شناسه جنسی یافت نشد");
+                return NotFound(" جنسیت یافت نشد");
             }
 
 
-            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.Identitycode);
+            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode);
 
             if (ReservedIdentityCode)
             {
                 return BadRequest("کد ملی وارد شده متعلق به شخص دیگری است");
             }
 
-            return await _user.AddUser(dto);    
+            return Ok(await _user.AddUser(dto));    
+        }
+
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK,Type =typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<ActionResult<string>> UpdateuserV1([FromRoute] Guid id , [FromForm] AddUpdateUserDto dto)
+        {
+            var ExistUser =await  _userRepository.UserExistance(id);
+
+            if (!ExistUser)
+            {
+                return NotFound("کاربر یافت نشد");
+            }
+
+            var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
+
+            if (!ExistGender)
+            {
+                return NotFound("جنسیت یافت نشد");
+
+            }
+
+            var ReservedIdentityCode =await _userRepository.ReservedIdentityCode(dto.IdentityCode);
+
+            if (ReservedIdentityCode)
+            {
+                return BadRequest("کد ملی متعلق به شخص دیگری است");
+            }
+
+            return Ok(await _user.UpdateUser(id, dto));
         }
     }
 }

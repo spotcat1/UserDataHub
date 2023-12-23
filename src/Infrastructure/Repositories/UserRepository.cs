@@ -85,5 +85,77 @@ namespace Infrastructure.Repositories
         {
             return await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
         }
+
+        public async Task<bool> UserExistance(Guid UserId)
+        {
+            return await _context.UserEntities.AnyAsync(x => x.Id == UserId && !x.IsDeleted);
+        }
+
+        public async Task<string> UpdateUser(Guid Id, UserModel userModel)
+        {
+            var UploadRootPath = Path.Combine(_webHostEnvironment.WebRootPath, ImagePath);
+
+            if (!Directory.Exists(UploadRootPath))
+            {
+                Directory.CreateDirectory(UploadRootPath);
+            }
+
+            var foundUserToUpdate = _context.UserEntities.FirstOrDefault(x => x.Id == Id && !x.IsDeleted);
+
+            if (foundUserToUpdate == null)
+            {
+                return "کاربر یافت نشد";
+            }
+
+            if (_context.GenderEntites.Any(g => g.Id == userModel.GenderId)) // Check if GenderId is valid
+            {
+                if (userModel.ImageFile is not null && userModel.ImageFile.Length > 0)
+                {
+                    string FileExtension = Path.GetExtension(Path.GetFileName(userModel.ImageFile.FileName));
+                    string NewFileName = $"user_{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
+                    var FilePath = Path.Combine(UploadRootPath, NewFileName);
+
+                    using (var FileStream = new FileStream(FilePath, FileMode.Create))
+                    {
+                        await userModel.ImageFile.CopyToAsync(FileStream).ConfigureAwait(false);
+                    }
+
+                    foundUserToUpdate.ImagePath = $"/{ImagePath}/{NewFileName}";
+
+                    if (!string.IsNullOrEmpty(foundUserToUpdate.ImagePath))
+                    {
+                        DeleteImage(foundUserToUpdate.ImagePath);
+                    }
+                }
+
+                foundUserToUpdate.GenderId = userModel.GenderId;
+                foundUserToUpdate.FirstName = userModel.FirstName;
+                foundUserToUpdate.LastName = userModel.LastName;
+                foundUserToUpdate.BirthDate = userModel.BirthDate;
+                foundUserToUpdate.IdentityCode = userModel.IdentityCode;
+                foundUserToUpdate.Nationality = userModel.Nationality;
+
+                var entity = _context.Entry(foundUserToUpdate);
+                entity.State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return "ویرایش با موفقیت انجام شد";
+            }
+            else
+            {
+                return "Invalid GenderId";
+            }
+        }
+
+
+
+        private void DeleteImage(string path)
+        {
+            var imagepath = _webHostEnvironment.WebRootPath + path;
+
+            if (File.Exists(imagepath))
+            {
+                File.Delete(imagepath);
+            }
+        }
     }
 }

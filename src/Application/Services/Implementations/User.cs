@@ -35,7 +35,7 @@ namespace Application.Services.Implementations
 
             dto.FirstName = RemoveSpaces(dto.FirstName);
             dto.LastName = RemoveSpaces(dto.LastName);
-            dto.Identitycode = RemoveSpaces(dto.Identitycode);
+            dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
 
             if (dto.Nationality != null)
             {
@@ -48,7 +48,7 @@ namespace Application.Services.Implementations
                 GenderId = dto.GenderId,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
-                IdentityCode = dto.Identitycode,
+                IdentityCode = dto.IdentityCode,
                 BirthDate = dto.BirthDate,
                 ImageFile = dto.ImageFile,
                 Nationality = dto.Nationality,
@@ -59,8 +59,45 @@ namespace Application.Services.Implementations
 
 
             return await _userRepository.AddUser(UserInstanceModel);
-        } 
+        }
 
+        public Task<string> UpdateUser(Guid id, AddUpdateUserDto dto)
+        {
+            var ValidationResult = _validator.Validate(dto);
+
+            if (!ValidationResult.IsValid)
+            {
+                throw new Exception(string.Join(",", ValidationResult.Errors.Select(x => x.ErrorMessage)));
+            }
+
+
+            dto.FirstName = RemoveSpaces(dto.FirstName);
+            dto.LastName = RemoveSpaces(dto.LastName);
+            dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
+
+            if (dto.Nationality != null)
+            {
+                dto.Nationality = RemoveSpaces(dto.Nationality);
+            }
+
+
+            var UserInstanceModel = new UserModel
+            {
+                GenderId = dto.GenderId,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                IdentityCode= dto.IdentityCode,
+                BirthDate = dto.BirthDate,
+                ImageFile = dto.ImageFile,
+                Nationality = dto.Nationality,
+
+            };
+
+
+            return _userRepository.UpdateUser(id,UserInstanceModel);
+
+
+        }
 
 
 

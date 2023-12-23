@@ -9,8 +9,12 @@ namespace Application.Contracts
     {
         Task<Guid> AddUser(UserModel userModel);
 
+        Task<string> UpdateUser(Guid Id,UserModel userModel);
+
         Task<bool> ReservedIdentityCode(string identitycode);
 
         Task<bool> GenderExistance(Guid genderId);
+
+        Task<bool> UserExistance(Guid UserId);
     }
 }
