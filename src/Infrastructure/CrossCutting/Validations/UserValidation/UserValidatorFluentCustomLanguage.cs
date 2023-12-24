@@ -10,10 +10,10 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
 
 
             AddTranslation("fa", "NotEmptyValidator", "{PropertyName}   الزامی میباشد ");
-            AddTranslation("fa", "MaximumLengthValidator", "بیش از حد مشخص شده است{PropertyName}   طول ");
-            AddTranslation("fa", "LengthValidator", "{PropertyName}   الزامی میباشد ");
-            AddTranslation("fa", "MatchesLettersValidator", "{PropertyName}  باید فقط حاوی حروف باشد ");
-            AddTranslation("fa", "MatchesNumbersValidator", "{PropertyName}   باید فقط حاوی ارقام باشد ");
+            AddTranslation("fa", "MaximumLengthValidator", "{PropertyName} بیش از حد مشخص شده است  طول ");
+            //AddTranslation("fa", "LengthValidator", "{PropertyName}   الزامی میباشد ");
+            //AddTranslation("fa", "RegularExpressionValidator", "{PropertyName}  باید فقط حاوی حروف باشد ");
+            //AddTranslation("fa", "RegularExpressionValidator", "{PropertyName}   باید فقط حاوی ارقام باشد ");
 
         }
     }

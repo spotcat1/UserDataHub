@@ -99,9 +99,12 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
         public async Task<ActionResult<List<GetAllUsersDto>>> GetAllUsersV1([FromQuery] string? FirstFilterOn, [FromQuery] string? FirstFilterQuery,
-            [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery)
+            [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery,
+            [FromQuery] string? FirstOrderBy, [FromQuery] bool FirstIsAscending,
+            [FromQuery] string? SecondOrderBy, [FromQuery] bool SecondIsAscending)
         {
-            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn,SecondFilterQuery);
+            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn,SecondFilterQuery,
+                FirstOrderBy,FirstIsAscending,SecondOrderBy,SecondIsAscending);
 
             if (Result == null)
             {

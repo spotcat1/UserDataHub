@@ -11,7 +11,15 @@ namespace Application.Services.Interfaces
 
         Task<GetUserbyIdDto> GetUserById(Guid id);
 
-        Task<List<GetAllUsersDto>> GetAllUsers(string? FirstFilterOn = null ,string? FisFilterQuery = null,
-            string? SecondFilterOn = null , string? SecondFilterQuery = null );
+        Task<List<GetAllUsersDto>> GetAllUsers(string? FirstFilterOn = null, string? FisFilterQuery = null,
+            string? SecondFilterOn = null, string? SecondFilterQuery = null,
+             string? FirstOrderBy = null, bool FirstIsAscending = true,
+             string? SecondOrderBy = null, bool SecondIsAscending=true);
+            
+            
+            
+
+
+
     }
 }

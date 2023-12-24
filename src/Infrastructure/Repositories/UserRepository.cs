@@ -110,47 +110,42 @@ namespace Infrastructure.Repositories
                 return "کاربر یافت نشد";
             }
 
-            if (_context.GenderEntites.Any(g => g.Id == userModel.GenderId)) // Check if GenderId is valid
+           
+            if (userModel.ImageFile is not null && userModel.ImageFile.Length > 0)
             {
-                if (userModel.ImageFile is not null && userModel.ImageFile.Length > 0)
+                string FileExtension = Path.GetExtension(Path.GetFileName(userModel.ImageFile.FileName));
+                string NewFileName = $"user_{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
+                var FilePath = Path.Combine(UploadRootPath, NewFileName);
+
+                using (var FileStream = new FileStream(FilePath, FileMode.Create))
                 {
-                    string FileExtension = Path.GetExtension(Path.GetFileName(userModel.ImageFile.FileName));
-                    string NewFileName = $"user_{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
-                    var FilePath = Path.Combine(UploadRootPath, NewFileName);
-
-                    using (var FileStream = new FileStream(FilePath, FileMode.Create))
-                    {
-                        await userModel.ImageFile.CopyToAsync(FileStream).ConfigureAwait(false);
-                    }
-
-                    foundUserToUpdate.ImagePath = $"/{ImagePath}/{NewFileName}";
-
-                    if (!string.IsNullOrEmpty(foundUserToUpdate.ImagePath))
-                    {
-                        DeleteImage(foundUserToUpdate.ImagePath);
-                    }
-                }
-                else
-                {
-                    foundUserToUpdate.ImagePath = foundUserToUpdate.ImagePath;
+                    await userModel.ImageFile.CopyToAsync(FileStream).ConfigureAwait(false);
                 }
 
-                foundUserToUpdate.GenderId = userModel.GenderId;
-                foundUserToUpdate.FirstName = userModel.FirstName;
-                foundUserToUpdate.LastName = userModel.LastName;
-                foundUserToUpdate.BirthDate = userModel.BirthDate;
-                foundUserToUpdate.IdentityCode = userModel.IdentityCode;
-                foundUserToUpdate.Nationality = userModel.Nationality;
+                foundUserToUpdate.ImagePath = $"/{ImagePath}/{NewFileName}";
 
-                var entity = _context.Entry(foundUserToUpdate);
-                entity.State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return "ویرایش با موفقیت انجام شد";
+                if (!string.IsNullOrEmpty(foundUserToUpdate.ImagePath))
+                {
+                    DeleteImage(foundUserToUpdate.ImagePath);
+                }
             }
             else
             {
-                return "Invalid GenderId";
+                foundUserToUpdate.ImagePath = foundUserToUpdate.ImagePath;
             }
+
+            foundUserToUpdate.GenderId = userModel.GenderId;
+            foundUserToUpdate.FirstName = userModel.FirstName;
+            foundUserToUpdate.LastName = userModel.LastName;
+            foundUserToUpdate.BirthDate = userModel.BirthDate;
+            foundUserToUpdate.IdentityCode = userModel.IdentityCode;
+            foundUserToUpdate.Nationality = userModel.Nationality;
+
+            var entity = _context.Entry(foundUserToUpdate);
+            entity.State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return "ویرایش با موفقیت انجام شد";
+           
         }
 
 
@@ -168,7 +163,7 @@ namespace Infrastructure.Repositories
         public async Task<UserModel> GetUserById(Guid Id)
         {
             var UserToReturn = await _context.UserEntities
-                .AsNoTracking() // so the DB does not track the entity because we want to modify the ImagePath
+                .AsNoTracking() 
                 .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
 
 
@@ -203,7 +198,9 @@ namespace Infrastructure.Repositories
 
 
         public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn=null, string? FirstFilterQuery = null,
-            string? SecondFilterOn = null, string? SecondFilterQuery = null)
+            string? SecondFilterOn = null, string? SecondFilterQuery = null,
+            string? FirstOrderBy = null, bool FirstIsAscending = true,
+            string? SecondOrderBy = null, bool SecondIsAscending = true)
         {
             var UsersToReturn = _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted).AsQueryable();
                 
@@ -230,6 +227,35 @@ namespace Infrastructure.Repositories
                 if (SecondFilterOn.Equals("نام"))
                 {
                     UsersToReturn = UsersToReturn.Where(x => x.FirstName.Contains(SecondFilterQuery));
+                }
+            }
+
+
+            //sort
+
+            if (!string.IsNullOrWhiteSpace(FirstOrderBy))
+            {
+                if (FirstOrderBy.Equals("نامخانوادگی"))
+                {
+                    UsersToReturn = FirstIsAscending ? UsersToReturn.OrderBy(x=>x.LastName):UsersToReturn.OrderByDescending(x=>x.LastName);
+                }
+
+                if (!string.IsNullOrWhiteSpace(SecondOrderBy))
+                {
+                    if (SecondOrderBy.Equals("نام") && FirstIsAscending == true )   
+                    {
+                        UsersToReturn = SecondIsAscending
+                            ? UsersToReturn.OrderBy(x => x.LastName).ThenBy(x => x.FirstName) :
+                            UsersToReturn.OrderBy(x => x.LastName).ThenByDescending(x => x.FirstName);
+                    }
+
+                    if (SecondOrderBy.Equals("نام") && !FirstIsAscending)
+                    {
+                        UsersToReturn =
+                            UsersToReturn = SecondIsAscending
+                            ? UsersToReturn.OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName) :
+                            UsersToReturn.OrderByDescending(x => x.LastName).ThenByDescending(x => x.FirstName);
+                    }
                 }
             }
 
