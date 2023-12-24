@@ -18,13 +18,13 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .MaximumLength(50)
-                .Matches("^[a-zA-Zآ-ِی]*$")
+                .Matches("^[آ-یa-zA-Z]*$")
                 .WithName("نام");
 
             RuleFor(x => x.LastName)
                 .NotEmpty()
                 .MaximumLength(50)
-                .Matches("^[a-zA-Zآ-ِی]*$")
+                .Matches("^[آ-یa-zA-Z]*$")
                 .WithName("نام خانوادگی");
 
             RuleFor(x => x.IdentityCode)
