@@ -35,10 +35,12 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
 
 
             RuleFor(x => x.BirthDate)
-                .NotEmpty();
+                .NotEmpty()
+                .WithName("تاریخ تولد");
 
             RuleFor(x => x.Nationality)
-                .MaximumLength(50);
+                .MaximumLength(50)
+                .WithName("ملیت");
         }
     }
 }
