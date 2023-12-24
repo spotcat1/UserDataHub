@@ -98,9 +98,10 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<List<GetAllUsersDto>>> GetAllUsersV1()
+        public async Task<ActionResult<List<GetAllUsersDto>>> GetAllUsersV1([FromQuery] string? FirstFilterOn, [FromQuery] string? FirstFilterQuery,
+            [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery)
         {
-            var Result = await _user.GetAllUsers();
+            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn,SecondFilterQuery);
 
             if (Result == null)
             {
@@ -109,6 +110,7 @@ namespace WebApi.Controllers
 
             return Ok(Result);
         }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]

@@ -1,6 +1,7 @@
 using Infrastructure;
 using Application;
 using Microsoft.AspNetCore.Mvc;
+using Infrastructure.CrossCutting.Validations.UserValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
+
+
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructure(builder.Configuration);

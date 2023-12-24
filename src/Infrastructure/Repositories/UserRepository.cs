@@ -202,15 +202,37 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<List<UserModel>> GetAllUsers()
+        public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn=null, string? FirstFilterQuery = null,
+            string? SecondFilterOn = null, string? SecondFilterQuery = null)
         {
-            var UsersToReturn = await _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted)
-                .ToListAsync();
+            var UsersToReturn = _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted).AsQueryable();
+                
 
             if (UsersToReturn == null)
             {
                 return null;
             }
+
+
+            //Filtering 
+
+            if (!string.IsNullOrWhiteSpace(FirstFilterOn) && !string.IsNullOrWhiteSpace(FirstFilterQuery))
+            {
+                if (FirstFilterOn.Equals("نامخانوادگی"))
+                {
+                    UsersToReturn = UsersToReturn.Where(x => x.LastName.Contains(FirstFilterQuery));
+                }
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(SecondFilterOn) && !string.IsNullOrWhiteSpace(SecondFilterQuery))
+            {
+                if (SecondFilterOn.Equals("نام"))
+                {
+                    UsersToReturn = UsersToReturn.Where(x => x.FirstName.Contains(SecondFilterQuery));
+                }
+            }
+
 
 
             var UsersMapped = _mapper.Map<List<UserModel>>(UsersToReturn);
@@ -225,7 +247,7 @@ namespace Infrastructure.Repositories
                 }
             }
 
-            return UsersMapped;
+            return UsersMapped.ToList();
         }
 
 

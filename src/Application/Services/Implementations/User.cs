@@ -18,6 +18,7 @@ namespace Application.Services.Implementations
         {
             _validator = validator;
             _userRepository = userRepository;
+
         }
 
         public async Task<Guid> AddUser(AddUpdateUserDto dto)
@@ -41,7 +42,7 @@ namespace Application.Services.Implementations
             {
                 dto.Nationality = RemoveSpaces(dto.Nationality);
             }
-       
+
 
             var UserInstanceModel = new UserModel
             {
@@ -86,7 +87,7 @@ namespace Application.Services.Implementations
                 GenderId = dto.GenderId,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
-                IdentityCode= dto.IdentityCode,
+                IdentityCode = dto.IdentityCode,
                 BirthDate = dto.BirthDate,
                 ImageFile = dto.ImageFile,
                 Nationality = dto.Nationality,
@@ -94,7 +95,7 @@ namespace Application.Services.Implementations
             };
 
 
-            return await _userRepository.UpdateUser(id,UserInstanceModel);
+            return await _userRepository.UpdateUser(id, UserInstanceModel);
 
 
         }
@@ -112,21 +113,48 @@ namespace Application.Services.Implementations
 
             var UserToReturnDto = new GetUserbyIdDto
             {
-                GenderId = UserToReturn.GenderId,   
+                GenderId = UserToReturn.GenderId,
                 FirstName = UserToReturn.FirstName,
                 LastName = UserToReturn.LastName,
-                BirthDate= UserToReturn.BirthDate,
+                BirthDate = UserToReturn.BirthDate,
                 Identitycode = UserToReturn.IdentityCode,
                 Nationality = UserToReturn.Nationality,
-                ImageFile = UserToReturn.ImageId, 
+                ImageFile = UserToReturn.ImageId,
             };
 
             return UserToReturnDto;
         }
 
-        public async Task<List<GetAllUsersDto>> GetAllUsers()
+        public async Task<List<GetAllUsersDto>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
+            string? SecondFilterOn = null, string? SecondFilterQuery = null)
         {
-            var UsersToReturn = await _userRepository.GetAllUsers();
+            if (FirstFilterOn != null)
+            {
+                FirstFilterOn = RemoveSpaces(FirstFilterOn);
+
+                if (FirstFilterQuery != null)
+                {
+                    FirstFilterQuery = RemoveSpaces(FirstFilterQuery);
+                }
+            }
+
+
+            if (SecondFilterOn != null)
+            {
+                SecondFilterOn = RemoveSpaces(SecondFilterOn);
+
+                if (SecondFilterQuery != null)
+                {
+                    SecondFilterQuery = RemoveSpaces(SecondFilterQuery);
+                }
+            }
+
+
+
+
+
+
+            var UsersToReturn = await _userRepository.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery);
             var listOfUsersDto = new List<GetAllUsersDto>();
             foreach (var user in UsersToReturn)
             {

@@ -19,7 +19,8 @@ namespace Application.Contracts
 
         Task<UserModel> GetUserById(Guid Id);
 
-        Task<List<UserModel>> GetAllUsers();
+        Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null , string? FirstFilterQuery = null,
+            string? SecondFilterOn = null , string? SecondFilterQuery = null);
 
         Task<string> SoftDeleteUser(Guid id);
 
