@@ -43,7 +43,7 @@ namespace Infrastructure.Repositories
                 Directory.CreateDirectory(UploadRootPath);
             }
 
-            
+
             if (userModel.ImageFile != null)
             {
                 var fileExtension = Path.GetExtension(userModel.ImageFile.FileName);
@@ -55,7 +55,7 @@ namespace Infrastructure.Repositories
 
                 }
             }
-       
+
 
             var entity = _mapper.Map<UserEntity>(userModel);
 
@@ -169,7 +169,7 @@ namespace Infrastructure.Repositories
         {
             var UserToReturn = await _context.UserEntities
                 .AsNoTracking() // so the DB does not track the entity because we want to modify the ImagePath
-                .FirstOrDefaultAsync(x=>x.Id==Id && !x.IsDeleted);
+                .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
 
 
             if (UserToReturn == null)
@@ -191,20 +191,20 @@ namespace Infrastructure.Repositories
                 Nationality = UserToReturn.Nationality,
             };
 
-            
+
 
             if (UserToReturnMapped.ImageId != null)
             {
                 UserToReturnMapped.ImageId = BuildAbsoluteUrl(UserToReturnMapped.ImageId);
             }
 
-            return  UserToReturnMapped;
+            return UserToReturnMapped;
         }
 
 
         public async Task<List<UserModel>> GetAllUsers()
         {
-            var UsersToReturn = await _context.UserEntities.AsNoTracking().Where(x=>!x.IsDeleted)
+            var UsersToReturn = await _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted)
                 .ToListAsync();
 
             if (UsersToReturn == null)
@@ -214,14 +214,14 @@ namespace Infrastructure.Repositories
 
 
             var UsersMapped = _mapper.Map<List<UserModel>>(UsersToReturn);
-           
-            
+
+
 
             foreach (var property in UsersMapped)
             {
-                if (property.ImageId !=null)
+                if (property.ImageId != null)
                 {
-                    property.ImageId = BuildAbsoluteUrl(property.ImageId);  
+                    property.ImageId = BuildAbsoluteUrl(property.ImageId);
                 }
             }
 
@@ -238,7 +238,7 @@ namespace Infrastructure.Repositories
 
         public async Task<string> SoftDeleteUser(Guid id)
         {
-            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id);
+            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
 
             if (UserToDelete == null)
             {
@@ -252,5 +252,32 @@ namespace Infrastructure.Repositories
             return "کاربر با موفقیت حذف منطقی شد";
 
         }
+
+
+
+        public async Task<string> DeleteUser(Guid id)
+        {
+             var userToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id);
+
+             if (userToDelete != null)
+             {
+                 _context.UserEntities.Remove(userToDelete);
+                 _context.SaveChangesAsync();
+
+                 return "کاربر با موفقیت حذف شد";
+             }
+             else
+             {
+                 return null;
+             }
+           
+             
+             
+            
+        }
+
+
+
+
     }
 }

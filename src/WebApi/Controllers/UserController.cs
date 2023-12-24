@@ -125,5 +125,23 @@ namespace WebApi.Controllers
 
             return Ok(Result);
         }
+
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async  Task<ActionResult<string>> DeleteUserV1([FromRoute] Guid id)
+        {
+            var Result = await _userRepository.DeleteUser(id);
+
+            if (Result == null)
+            {
+                return "کاربر یافت نشد";
+            }
+
+
+            return Ok(Result);  
+        }
     }
 }

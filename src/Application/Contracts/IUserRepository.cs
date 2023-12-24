@@ -22,5 +22,7 @@ namespace Application.Contracts
         Task<List<UserModel>> GetAllUsers();
 
         Task<string> SoftDeleteUser(Guid id);
+
+        Task<string> DeleteUser(Guid id);
     }
 }
