@@ -16,7 +16,7 @@ namespace Application.Exceptions
         }
 
 
-        public NotFoundException(string name, object key) : base($"Entity {name} ({key}) was not found</p>")
+        public NotFoundException(string name, object key) : base($"خطا در سیستم {key}")
         {
         }
 

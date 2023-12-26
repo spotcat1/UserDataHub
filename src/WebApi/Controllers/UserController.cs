@@ -23,44 +23,44 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK,Type =typeof(Guid))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult<Guid>> AddUserV1([FromForm]AddUpdateUserDto dto)
+        public async Task<ActionResult<Guid>> AddUserV1([FromForm] AddUpdateUserDto dto)
         {
             var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
 
-         
-            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode,Guid.Empty);
 
-            
+            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode, Guid.Empty);
+
+
 
             var Result = await _user.AddUser(dto);
-            
 
-           
 
-            return Ok(Result);    
+
+
+            return Ok(Result);
         }
 
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK,Type =typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult<string>> UpdateuserV1([FromRoute] Guid id , [FromForm] AddUpdateUserDto dto)
+        public async Task<ActionResult<string>> UpdateuserV1([FromRoute] Guid id, [FromForm] AddUpdateUserDto dto)
         {
-            var ExistUser =await  _userRepository.UserExistance(id);
+            var ExistUser = await _userRepository.UserExistance(id);
 
-            
+
 
             var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
 
-          
 
-            var ReservedIdentityCode =await _userRepository.ReservedIdentityCode(dto.IdentityCode,id);
+
+            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode, id);
 
             if (ExistGender && ExistUser && ReservedIdentityCode)
             {
@@ -70,22 +70,19 @@ namespace WebApi.Controllers
             }
 
             return "خطا";
-         
+
         }
 
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        
-        public async Task<ActionResult<AddUpdateUserDto>> GetUserByIdV1([FromRoute] Guid id)
+
+        public async Task<ActionResult<AddUpdateUserDto>> GetUserByIdV1([FromRoute] Guid id, [FromQuery] bool? ShowIfIsDeleted)
         {
-            var Result = await _user.GetUserById(id);
-            
-            if (Result == null)
-            {
-                return BadRequest("کاربر یافت نشد");
-            }
+            var Result = await _user.GetUserById(id, ShowIfIsDeleted?? false);
+
+           
 
             return Ok(Result);
         }
@@ -98,15 +95,12 @@ namespace WebApi.Controllers
             [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery,
             [FromQuery] string? FirstOrderBy, [FromQuery] bool? FirstIsAscending,
             [FromQuery] string? SecondOrderBy, [FromQuery] bool? SecondIsAscending,
+            [FromQuery] bool? ShowDeletedOnes,
             [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 100)
         {
-            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn,SecondFilterQuery,
-                FirstOrderBy,FirstIsAscending?? true,SecondOrderBy,SecondIsAscending?? true,PageNumber,PageSize);
+            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,
+                FirstOrderBy, FirstIsAscending ?? true, SecondOrderBy, SecondIsAscending ?? true, ShowDeletedOnes ?? false, PageNumber, PageSize);
 
-            if (Result == null)
-            {
-                return BadRequest("کاربری برای نمایش وجود ندارد");
-            }
 
             return Ok(Result);
         }
@@ -118,7 +112,7 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<string>> SoftDeleteUserV1([FromRoute] Guid id)
         {
-            var Result = await _userRepository.SoftDeleteUser(id);    
+            var Result = await _userRepository.SoftDeleteUser(id);
 
             return Ok(Result);
         }
@@ -128,11 +122,11 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async  Task<ActionResult<string>> DeleteUserV1([FromRoute] Guid id)
+        public async Task<ActionResult<string>> DeleteUserV1([FromRoute] Guid id)
         {
             var Result = await _userRepository.DeleteUser(id);
 
-            return Ok(Result);  
+            return Ok(Result);
         }
     }
 }

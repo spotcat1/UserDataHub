@@ -129,7 +129,7 @@ namespace Infrastructure.Repositories
 
             if (foundUserToUpdate == null)
             {
-                return "کاربر یافت نشد";
+                throw new NotFoundException("User", Id);
             }
 
            
@@ -183,11 +183,11 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<UserModel> GetUserById(Guid Id)
+        public async Task<UserModel> GetUserById(Guid Id, bool ShowIfIsDeleted = false)
         {
             var UserToReturn = await _context.UserEntities
-                .AsNoTracking() 
-                .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == Id);
 
 
             if (UserToReturn == null)
@@ -195,7 +195,12 @@ namespace Infrastructure.Repositories
                 throw new NotFoundException("User",Id);
             }
 
-
+            if (!ShowIfIsDeleted)
+            {
+                UserToReturn = await _context.UserEntities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
+            }
 
             var UserToReturnMapped = new UserModel
             {
@@ -223,16 +228,12 @@ namespace Infrastructure.Repositories
         public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn=null, string? FirstFilterQuery = null,
             string? SecondFilterOn = null, string? SecondFilterQuery = null,
             string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null, bool SecondIsAscending = true,
+            string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
             int PageNumber = 1, int PageSize = 100)
         {
-            var UsersToReturn = _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted).AsQueryable();
-                
-
-            if (UsersToReturn == null)
-            {
-                throw new NotFoundException();
-            }
+           
+            var UsersToReturn = _context.UserEntities.AsNoTracking().AsQueryable();
+               
 
 
             //Filtering 
@@ -281,6 +282,11 @@ namespace Infrastructure.Repositories
                             UsersToReturn.OrderByDescending(x => x.LastName).ThenByDescending(x => x.FirstName);
                     }
                 }
+            }
+
+            if (!ShowDeletedOnes)
+            {
+                UsersToReturn = UsersToReturn.Where(x => !x.IsDeleted);
             }
 
             var SkipResult = (PageNumber - 1) * PageSize;

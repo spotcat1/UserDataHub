@@ -122,9 +122,9 @@ namespace Application.Services.Implementations
             return input.Replace(" ", "");
         }
 
-        public async Task<GetUserbyIdDto> GetUserById(Guid id)
+        public async Task<GetUserbyIdDto> GetUserById(Guid id,bool ShowIdIsDeleted = false)
         {
-            var UserToReturn = await _userRepository.GetUserById(id);
+            var UserToReturn = await _userRepository.GetUserById(id,ShowIdIsDeleted);
 
           
 
@@ -144,7 +144,7 @@ namespace Application.Services.Implementations
 
         public async Task<List<GetAllUsersDto>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
             string? SecondFilterOn = null, string? SecondFilterQuery = null, string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null, bool SecondIsAscending = true,
+            string? SecondOrderBy = null, bool SecondIsAscending = true,bool ShowDeletedOnes = false,
             int PageNumber = 1, int PageSize = 100)
         {
             if (FirstFilterOn != null)
@@ -185,7 +185,7 @@ namespace Application.Services.Implementations
 
 
             var UsersToReturn = await _userRepository.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,FirstOrderBy,FirstIsAscending,
-                SecondOrderBy,SecondIsAscending, PageNumber,PageSize);
+                SecondOrderBy,SecondIsAscending, ShowDeletedOnes,PageNumber,PageSize);
             var listOfUsersDto = new List<GetAllUsersDto>();
             foreach (var user in UsersToReturn)
             {

@@ -17,12 +17,12 @@ namespace Application.Contracts
 
         Task<bool> UserExistance(Guid UserId);
 
-        Task<UserModel> GetUserById(Guid Id);
+        Task<UserModel> GetUserById(Guid Id, bool ShowIfIsDeleted = false);
 
         Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null , string? FirstFilterQuery = null,
             string? SecondFilterOn = null , string? SecondFilterQuery = null,
             string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null,bool SecondIsAscending = true,
+            string? SecondOrderBy = null,bool SecondIsAscending = true,bool ShowDeletedOnes = false, 
             int pageNumber = 1 , int PageSize = 100);
 
         Task<string> SoftDeleteUser(Guid id);
