@@ -1,6 +1,5 @@
-- sort the null or the notfound or other exceptions in the code 
+- tested the create and the update api and it worked correct
 
-- onto the getall
+- test the Delete and the Get apis to see if the exception handling id being executed right
 
-
--ADD,Update,GetById is checked and sorted, the excpetions have been Changed and applied
+- add the option showall for the get api's (to show the user even if it is softly deleted)

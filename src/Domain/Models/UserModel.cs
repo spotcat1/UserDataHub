@@ -25,6 +25,8 @@ namespace Domain.Models
 
         public bool IsDeleted { get; set; }
 
+        
+
 
 
 

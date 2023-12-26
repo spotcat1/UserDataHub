@@ -11,7 +11,7 @@ namespace Application.Contracts
 
         Task<string> UpdateUser(Guid Id,UserModel userModel);
 
-        Task<bool> ReservedIdentityCode(string identitycode);
+        Task<bool> ReservedIdentityCode(string identitycode,Guid id);
 
         Task<bool> GenderExistance(Guid genderId);
 

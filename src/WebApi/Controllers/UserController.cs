@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
 
          
-            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode);
+            var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode,Guid.Empty);
 
             
 
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
 
           
 
-            var ReservedIdentityCode =await _userRepository.ReservedIdentityCode(dto.IdentityCode);
+            var ReservedIdentityCode =await _userRepository.ReservedIdentityCode(dto.IdentityCode,id);
 
             if (ExistGender && ExistUser && ReservedIdentityCode)
             {
@@ -120,11 +120,6 @@ namespace WebApi.Controllers
         {
             var Result = await _userRepository.SoftDeleteUser(id);    
 
-            if (Result == null)
-            {
-                return NotFound("کاربر برای حدف منطقی یافت نشد");
-            }
-
             return Ok(Result);
         }
 
@@ -136,12 +131,6 @@ namespace WebApi.Controllers
         public async  Task<ActionResult<string>> DeleteUserV1([FromRoute] Guid id)
         {
             var Result = await _userRepository.DeleteUser(id);
-
-            if (Result == null)
-            {
-                return "کاربر یافت نشد";
-            }
-
 
             return Ok(Result);  
         }

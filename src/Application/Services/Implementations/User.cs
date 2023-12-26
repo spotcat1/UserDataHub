@@ -26,13 +26,6 @@ namespace Application.Services.Implementations
         {
 
 
-            var ValidationResult = _validator.Validate(dto);
-
-            if (!ValidationResult.IsValid)
-            {
-                throw new CustomValidationException(ValidationResult.Errors);
-            }
-
 
 
             dto.FirstName = RemoveSpaces(dto.FirstName);
@@ -45,6 +38,18 @@ namespace Application.Services.Implementations
             }
 
 
+
+            var ValidationResult = _validator.Validate(dto);
+
+            if (!ValidationResult.IsValid)
+            {
+                throw new CustomValidationException(ValidationResult.Errors);
+            }
+
+
+
+         
+
             var UserInstanceModel = new UserModel
             {
                 GenderId = dto.GenderId,
@@ -54,6 +59,7 @@ namespace Application.Services.Implementations
                 BirthDate = dto.BirthDate,
                 ImageFile = dto.ImageFile,
                 Nationality = dto.Nationality,
+                IsDeleted = dto.IsDeleted,
 
             };
 
@@ -65,12 +71,6 @@ namespace Application.Services.Implementations
 
         public async Task<string> UpdateUser(Guid id, AddUpdateUserDto dto)
         {
-            var ValidationResult = _validator.Validate(dto);
-
-            if (!ValidationResult.IsValid)
-            {
-                throw new CustomValidationException(ValidationResult.Errors);
-            }
 
 
             dto.FirstName = RemoveSpaces(dto.FirstName);
@@ -83,6 +83,19 @@ namespace Application.Services.Implementations
             }
 
 
+
+
+            var ValidationResult = _validator.Validate(dto);
+
+            if (!ValidationResult.IsValid)
+            {
+                throw new CustomValidationException(ValidationResult.Errors);
+            }
+
+
+           
+
+
             var UserInstanceModel = new UserModel
             {
                 GenderId = dto.GenderId,
@@ -92,6 +105,7 @@ namespace Application.Services.Implementations
                 BirthDate = dto.BirthDate,
                 ImageFile = dto.ImageFile,
                 Nationality = dto.Nationality,
+                IsDeleted = dto.IsDeleted,
 
             };
 
@@ -112,10 +126,7 @@ namespace Application.Services.Implementations
         {
             var UserToReturn = await _userRepository.GetUserById(id);
 
-            if (UserToReturn == null)
-            {
-                return null;
-            }
+          
 
             var UserToReturnDto = new GetUserbyIdDto
             {

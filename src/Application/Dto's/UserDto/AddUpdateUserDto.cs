@@ -14,6 +14,8 @@ namespace Application.Dto_s.UserDto
         public DateTime BirthDate { get; set; }
         public IFormFile? ImageFile { get; set; }
         public string? Nationality { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
         
         
 

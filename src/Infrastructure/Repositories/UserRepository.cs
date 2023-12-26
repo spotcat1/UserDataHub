@@ -80,13 +80,13 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<bool> ReservedIdentityCode(string identitycode)
+        public async Task<bool> ReservedIdentityCode(string identitycode, Guid id)
         {
-            var FoundRegisteredIdentityCode=  await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted);
+            var FoundRegisteredIdentityCode=  await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted && x.Id != id);
 
-            if (!FoundRegisteredIdentityCode)
+            if (FoundRegisteredIdentityCode)
             {
-                throw new NotFoundException("User",identitycode);
+                throw new CustomException("کد ملی متعلق به شخص دیگری است");
             }
 
             return true;
@@ -162,6 +162,7 @@ namespace Infrastructure.Repositories
             foundUserToUpdate.BirthDate = userModel.BirthDate;
             foundUserToUpdate.IdentityCode = userModel.IdentityCode;
             foundUserToUpdate.Nationality = userModel.Nationality;
+            foundUserToUpdate.IsDeleted = userModel.IsDeleted;
 
             var entity = _context.Entry(foundUserToUpdate);
             entity.State = EntityState.Modified;
@@ -230,7 +231,7 @@ namespace Infrastructure.Repositories
 
             if (UsersToReturn == null)
             {
-                return null;
+                throw new NotFoundException();
             }
 
 
@@ -311,12 +312,7 @@ namespace Infrastructure.Repositories
 
         public async Task<string> SoftDeleteUser(Guid id)
         {
-            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
-
-            if (UserToDelete == null)
-            {
-                return null;
-            }
+            var UserToDelete = await GetUserById(id); 
 
             UserToDelete.IsDeleted = true;
 
@@ -341,7 +337,7 @@ namespace Infrastructure.Repositories
              }
              else
              {
-                 return null;
+                throw new NotFoundException("User", id);
              }
            
              
