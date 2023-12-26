@@ -2,6 +2,7 @@
 
 using Application.Contracts;
 using Application.Dto_s.UserDto;
+using Application.Exceptions;
 using Application.Services.Interfaces;
 using Domain.Models;
 using FluentValidation;
@@ -29,7 +30,7 @@ namespace Application.Services.Implementations
 
             if (!ValidationResult.IsValid)
             {
-                throw new Exception(string.Join(",", ValidationResult.Errors.Select(x => x.ErrorMessage)));
+                throw new CustomValidationException(ValidationResult.Errors);
             }
 
 
@@ -68,7 +69,7 @@ namespace Application.Services.Implementations
 
             if (!ValidationResult.IsValid)
             {
-                throw new Exception(string.Join(",", ValidationResult.Errors.Select(x => x.ErrorMessage)));
+                throw new CustomValidationException(ValidationResult.Errors);
             }
 
 
@@ -110,6 +111,11 @@ namespace Application.Services.Implementations
         public async Task<GetUserbyIdDto> GetUserById(Guid id)
         {
             var UserToReturn = await _userRepository.GetUserById(id);
+
+            if (UserToReturn == null)
+            {
+                return null;
+            }
 
             var UserToReturnDto = new GetUserbyIdDto
             {

@@ -1,1 +1,6 @@
-- apply the sort next on the User
+- sort the null or the notfound or other exceptions in the code 
+
+- onto the getall
+
+
+-ADD,Update,GetById is checked and sorted, the excpetions have been Changed and applied

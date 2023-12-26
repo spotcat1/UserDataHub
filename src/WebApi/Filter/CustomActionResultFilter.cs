@@ -19,7 +19,6 @@ namespace WebApi.Filter
                     context.Result = new OkObjectResult(new CustomActionResult<object>
                     {
                         Success = true,
-                        Message = "",
                         Result = obj.Value
                     });
                 }

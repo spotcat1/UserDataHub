@@ -1,5 +1,6 @@
 ﻿using Application.Contracts;
 using Application.Dto_s.UserDto;
+using Application.Exceptions;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Models;
@@ -81,17 +82,38 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> ReservedIdentityCode(string identitycode)
         {
-            return await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted);
+            var FoundRegisteredIdentityCode=  await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted);
+
+            if (!FoundRegisteredIdentityCode)
+            {
+                throw new NotFoundException("User",identitycode);
+            }
+
+            return true;
         }
 
         public async Task<bool> GenderExistance(Guid genderId)
         {
-            return await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
+            var FoundGender =  await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
+
+            if (!FoundGender)
+            {
+                throw new NotFoundException("User",genderId);
+            }
+
+            return true;
         }
 
         public async Task<bool> UserExistance(Guid UserId)
         {
-            return await _context.UserEntities.AnyAsync(x => x.Id == UserId && !x.IsDeleted);
+            var FoundUser = await _context.UserEntities.AnyAsync(x => x.Id == UserId && !x.IsDeleted);
+
+            if (!FoundUser)
+            {
+                throw new NotFoundException("User", UserId);
+            }
+
+            return true;
         }
 
         public async Task<string> UpdateUser(Guid Id, UserModel userModel)
@@ -169,7 +191,7 @@ namespace Infrastructure.Repositories
 
             if (UserToReturn == null)
             {
-                return null;
+                throw new NotFoundException("User",Id);
             }
 
 

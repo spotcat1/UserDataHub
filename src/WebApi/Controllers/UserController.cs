@@ -10,6 +10,7 @@ namespace WebApi.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [CustomActionResultFilter]
+    [ExceptionFilter]
     public class UserController : ControllerBase
     {
         private readonly IUser _user;
@@ -30,20 +31,15 @@ namespace WebApi.Controllers
         {
             var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
 
-            if (!ExistGender)
-            {
-                return NotFound(" جنسیت یافت نشد");
-            }
-
-
+         
             var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode);
 
-            if (ReservedIdentityCode)
-            {
-                return BadRequest("کد ملی وارد شده متعلق به شخص دیگری است");
-            }
+            
 
             var Result = await _user.AddUser(dto);
+            
+
+           
 
             return Ok(Result);    
         }
@@ -58,29 +54,23 @@ namespace WebApi.Controllers
         {
             var ExistUser =await  _userRepository.UserExistance(id);
 
-            if (!ExistUser)
-            {
-                return NotFound("کاربر یافت نشد");
-            }
+            
 
             var ExistGender = await _userRepository.GenderExistance(dto.GenderId);
 
-            if (!ExistGender)
-            {
-                return NotFound("جنسیت یافت نشد");
-
-            }
+          
 
             var ReservedIdentityCode =await _userRepository.ReservedIdentityCode(dto.IdentityCode);
 
-            if (ReservedIdentityCode)
+            if (ExistGender && ExistUser && ReservedIdentityCode)
             {
-                return BadRequest("کد ملی متعلق به شخص دیگری است");
+                var Result = await _user.UpdateUser(id, dto);
+
+                return Ok(Result);
             }
 
-            var Result = await _user.UpdateUser(id, dto);
-
-            return Ok(Result);
+            return "خطا";
+         
         }
 
 
