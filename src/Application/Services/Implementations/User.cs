@@ -127,7 +127,8 @@ namespace Application.Services.Implementations
 
         public async Task<List<GetAllUsersDto>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
             string? SecondFilterOn = null, string? SecondFilterQuery = null, string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null, bool SecondIsAscending = true)
+            string? SecondOrderBy = null, bool SecondIsAscending = true,
+            int PageNumber = 1, int PageSize = 100)
         {
             if (FirstFilterOn != null)
             {
@@ -137,11 +138,6 @@ namespace Application.Services.Implementations
                 {
                     FirstFilterQuery = RemoveSpaces(FirstFilterQuery);
                 }
-            }
-
-            if (FirstOrderBy != null)
-            {
-                FirstOrderBy = RemoveSpaces(FirstOrderBy);
             }
 
 
@@ -155,13 +151,24 @@ namespace Application.Services.Implementations
                 }
             }
 
+            if (FirstOrderBy != null)
+            {
+                FirstOrderBy = RemoveSpaces(FirstOrderBy);
+            }
+
+            if (SecondOrderBy != null)
+            {
+                SecondOrderBy = RemoveSpaces(SecondOrderBy);
+            }
+          
+
 
 
 
 
 
             var UsersToReturn = await _userRepository.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,FirstOrderBy,FirstIsAscending,
-                SecondOrderBy,SecondIsAscending);
+                SecondOrderBy,SecondIsAscending, PageNumber,PageSize);
             var listOfUsersDto = new List<GetAllUsersDto>();
             foreach (var user in UsersToReturn)
             {

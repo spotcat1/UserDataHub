@@ -22,7 +22,8 @@ namespace Application.Contracts
         Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null , string? FirstFilterQuery = null,
             string? SecondFilterOn = null , string? SecondFilterQuery = null,
             string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null,bool SecondIsAscending = true);
+            string? SecondOrderBy = null,bool SecondIsAscending = true,
+            int pageNumber = 1 , int PageSize = 100);
 
         Task<string> SoftDeleteUser(Guid id);
 

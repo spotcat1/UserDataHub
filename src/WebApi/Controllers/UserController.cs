@@ -100,11 +100,12 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<List<GetAllUsersDto>>> GetAllUsersV1([FromQuery] string? FirstFilterOn, [FromQuery] string? FirstFilterQuery,
             [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery,
-            [FromQuery] string? FirstOrderBy, [FromQuery] bool FirstIsAscending,
-            [FromQuery] string? SecondOrderBy, [FromQuery] bool SecondIsAscending)
+            [FromQuery] string? FirstOrderBy, [FromQuery] bool? FirstIsAscending,
+            [FromQuery] string? SecondOrderBy, [FromQuery] bool? SecondIsAscending,
+            [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 100)
         {
             var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn,SecondFilterQuery,
-                FirstOrderBy,FirstIsAscending,SecondOrderBy,SecondIsAscending);
+                FirstOrderBy,FirstIsAscending?? true,SecondOrderBy,SecondIsAscending?? true,PageNumber,PageSize);
 
             if (Result == null)
             {

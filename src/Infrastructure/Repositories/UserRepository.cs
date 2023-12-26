@@ -200,7 +200,8 @@ namespace Infrastructure.Repositories
         public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn=null, string? FirstFilterQuery = null,
             string? SecondFilterOn = null, string? SecondFilterQuery = null,
             string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null, bool SecondIsAscending = true)
+            string? SecondOrderBy = null, bool SecondIsAscending = true,
+            int PageNumber = 1, int PageSize = 100)
         {
             var UsersToReturn = _context.UserEntities.AsNoTracking().Where(x => !x.IsDeleted).AsQueryable();
                 
@@ -259,6 +260,8 @@ namespace Infrastructure.Repositories
                 }
             }
 
+            var SkipResult = (PageNumber - 1) * PageSize;
+
 
 
             var UsersMapped = _mapper.Map<List<UserModel>>(UsersToReturn);
@@ -273,7 +276,7 @@ namespace Infrastructure.Repositories
                 }
             }
 
-            return UsersMapped.ToList();
+            return  UsersMapped.Skip(SkipResult).Take(PageSize).ToList();
         }
 
 
