@@ -2,12 +2,14 @@
 using Application.Dto_s.UserDto;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Filter;
 
 namespace WebApi.Controllers
 {
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     [ApiVersion("1.0")]
+    [CustomActionResultFilter]
     public class UserController : ControllerBase
     {
         private readonly IUser _user;
@@ -41,7 +43,9 @@ namespace WebApi.Controllers
                 return BadRequest("کد ملی وارد شده متعلق به شخص دیگری است");
             }
 
-            return Ok(await _user.AddUser(dto));    
+            var Result = await _user.AddUser(dto);
+
+            return Ok(Result);    
         }
 
 
@@ -74,7 +78,9 @@ namespace WebApi.Controllers
                 return BadRequest("کد ملی متعلق به شخص دیگری است");
             }
 
-            return Ok(await _user.UpdateUser(id, dto));
+            var Result = await _user.UpdateUser(id, dto);
+
+            return Ok(Result);
         }
 
 

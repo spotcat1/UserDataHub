@@ -10,7 +10,6 @@
     <Folder Include="Behaviours\" />
     <Folder Include="Commands\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Wrappers\" />
     <Folder Include="Queries\" />
   </ItemGroup>
 
