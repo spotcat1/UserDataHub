@@ -132,10 +132,25 @@ namespace Infrastructure.Repositories
                 throw new NotFoundException("User", Id);
             }
 
-           
+
+
+            if (userModel.ImageFile != null)
+            {
+                var fileExtension = Path.GetExtension(userModel.ImageFile.FileName);
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                if (!allowedExtensions.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
+                {
+
+                    userModel.ImageFile = null;
+
+                }
+            }
+
+
             if (userModel.ImageFile is not null && userModel.ImageFile.Length > 0)
             {
                 string FileExtension = Path.GetExtension(Path.GetFileName(userModel.ImageFile.FileName));
+
                 string NewFileName = $"user_{Guid.NewGuid().ToString().Replace("-", "")}{FileExtension}";
                 var FilePath = Path.Combine(UploadRootPath, NewFileName);
 
@@ -189,18 +204,21 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
-
-            if (UserToReturn == null)
-            {
-                throw new NotFoundException("User",Id);
-            }
-
+           
             if (!ShowIfIsDeleted)
             {
                 UserToReturn = await _context.UserEntities
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
             }
+
+
+
+            if (UserToReturn == null)
+            {
+                throw new NotFoundException("User", Id);
+            }
+
 
             var UserToReturnMapped = new UserModel
             {
@@ -318,11 +336,16 @@ namespace Infrastructure.Repositories
 
         public async Task<string> SoftDeleteUser(Guid id)
         {
-            var UserToDelete = await GetUserById(id); 
+            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+
+            if (UserToDelete == null)
+            {
+                throw new NotFoundException("کاربر برای حذف منطقی یافت نشد");
+            }
 
             UserToDelete.IsDeleted = true;
 
-            await _context.SaveChangesAsync();
+             await _context.SaveChangesAsync();
 
             return "کاربر با موفقیت حذف منطقی شد";
 
@@ -343,7 +366,7 @@ namespace Infrastructure.Repositories
              }
              else
              {
-                throw new NotFoundException("User", id);
+                throw new NotFoundException("کاربر برای حذف یافت نشد");
              }
            
              

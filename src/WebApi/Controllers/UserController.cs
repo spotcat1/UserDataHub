@@ -1,6 +1,9 @@
-﻿using Application.Contracts;
+﻿using Application.Commands;
+using Application.Contracts;
 using Application.Dto_s.UserDto;
+using Application.Queries;
 using Application.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Filter;
 
@@ -15,11 +18,13 @@ namespace WebApi.Controllers
     {
         private readonly IUser _user;
         private readonly IUserRepository _userRepository;
+        private readonly IMediator _mediator;
 
-        public UserController(IUser user, IUserRepository userRepositor)
+        public UserController(IUser user, IUserRepository userRepositor, IMediator mediator)
         {
             _user = user;
             _userRepository = userRepositor;
+            _mediator = mediator;
         }
 
         [HttpPost]
@@ -36,7 +41,7 @@ namespace WebApi.Controllers
 
 
 
-            var Result = await _user.AddUser(dto);
+            var Result = await _mediator.Send(new CreateUserCommand(dto));
 
 
 
@@ -64,7 +69,7 @@ namespace WebApi.Controllers
 
             if (ExistGender && ExistUser && ReservedIdentityCode)
             {
-                var Result = await _user.UpdateUser(id, dto);
+                var Result = await _mediator.Send(new UpdateUserCommand(id,dto));
 
                 return Ok(Result);
             }
@@ -80,7 +85,7 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<AddUpdateUserDto>> GetUserByIdV1([FromRoute] Guid id, [FromQuery] bool? ShowIfIsDeleted)
         {
-            var Result = await _user.GetUserById(id, ShowIfIsDeleted?? false);
+            var Result = await _mediator.Send(new GetUserByIdQuery(id, ShowIfIsDeleted ?? false));
 
            
 
@@ -98,8 +103,8 @@ namespace WebApi.Controllers
             [FromQuery] bool? ShowDeletedOnes,
             [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 100)
         {
-            var Result = await _user.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,
-                FirstOrderBy, FirstIsAscending ?? true, SecondOrderBy, SecondIsAscending ?? true, ShowDeletedOnes ?? false, PageNumber, PageSize);
+            var Result = await _mediator.Send(new GetAllUsersQuery(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,
+                FirstOrderBy, FirstIsAscending ?? true, SecondOrderBy, SecondIsAscending ?? true, ShowDeletedOnes ?? false, PageNumber, PageSize));
 
 
             return Ok(Result);
@@ -112,7 +117,7 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<string>> SoftDeleteUserV1([FromRoute] Guid id)
         {
-            var Result = await _userRepository.SoftDeleteUser(id);
+            var Result = await _mediator.Send(new SoftDeleteUserCommand(id));
 
             return Ok(Result);
         }
@@ -124,7 +129,7 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<string>> DeleteUserV1([FromRoute] Guid id)
         {
-            var Result = await _userRepository.DeleteUser(id);
+            var Result = await _mediator.Send(new DeleteUserCommand(id));
 
             return Ok(Result);
         }

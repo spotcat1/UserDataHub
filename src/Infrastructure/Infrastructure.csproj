@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="CrossCutting\Logs\" />
-    <Folder Include="Handlers\" />
     <Folder Include="Persistants\Migrations\" />
   </ItemGroup>
 

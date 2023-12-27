@@ -1,13 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "AIyMe1r99PAGtusxwZNxD9lceXkPDfoo/OV6FmKWuOL5e0voKLVsbOw2bwKNrQdXLhvPOSOcRi5RYYVOR+GjxQ==",
+  "dgSpecHash": "XqXlR8g7zbGr2tLfQ2Hpai+P/X4iGB7o+9Z8IL6+84DelcQju6aMdyJq0RyarGa9kiGussK6BPqRb15QaU1qXA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\Application\\Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\fluentvalidation\\11.8.1\\fluentvalidation.11.8.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.8.1\\fluentvalidation.dependencyinjectionextensions.11.8.1.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\mediatr\\11.0.0\\mediatr.11.0.0.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.0.0\\mediatr.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
-    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
   ],

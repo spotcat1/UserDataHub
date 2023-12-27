@@ -87,3 +87,6 @@ C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentV
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentValidation.AspNetCore.dll
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Versioning.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\MediatR.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\MediatR.Contracts.dll
+C:\Users\Mahan_Owji\source\repos\UserDataHub\src\WebApi\bin\Debug\net7.0\MediatR.Extensions.Microsoft.DependencyInjection.dll
