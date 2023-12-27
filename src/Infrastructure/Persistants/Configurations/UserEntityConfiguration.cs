@@ -42,6 +42,8 @@ namespace Infrastructure.Persistants.Configurations
                 .HasOne(x => x.Gender)
                 .WithMany(x => x.Users)
                 .HasForeignKey(x => x.GenderId);
+                
+
         }
     }
 }

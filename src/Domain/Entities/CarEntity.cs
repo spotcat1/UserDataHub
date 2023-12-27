@@ -17,7 +17,6 @@ namespace Domain.Entities
         public bool IsDeleted { get; set; }
 
 
-
         public UserEntity? User { get; set; }
 
     }
