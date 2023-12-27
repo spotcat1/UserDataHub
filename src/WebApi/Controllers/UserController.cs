@@ -39,14 +39,14 @@ namespace WebApi.Controllers
 
             var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode, Guid.Empty);
 
+            if (ExistGender && ReservedIdentityCode)
+            {
+                var Result = await _mediator.Send(new CreateUserCommand(dto));
+                return Ok(Result);
+            }
 
-
-            var Result = await _mediator.Send(new CreateUserCommand(dto));
-
-
-
-
-            return Ok(Result);
+            return Guid.Empty;
+            
         }
 
 

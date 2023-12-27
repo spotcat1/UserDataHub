@@ -1,15 +1,26 @@
 using Infrastructure;
 using Application;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.CrossCutting.Validations.UserValidation;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true
-    );
+    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+    });
+
+
 
 
 builder.Services.AddApiVersioning(options =>
@@ -36,9 +47,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

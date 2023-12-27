@@ -57,6 +57,11 @@ namespace Infrastructure.Repositories
                 }
             }
 
+            if (userModel.BirthDate.Year < 1800 || userModel.BirthDate.Year > 2023)
+            {
+                throw new CustomException("خطا در ثبت تاریخ تولد");
+            }
+
 
             var entity = _mapper.Map<UserEntity>(userModel);
 

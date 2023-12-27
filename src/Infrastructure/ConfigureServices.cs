@@ -8,6 +8,7 @@ using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Infrastructure
@@ -24,7 +25,10 @@ namespace Infrastructure
 
             services.AddScoped<IUserRepository,UserRepository>();
 
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Options =>
+            {
+                Options.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
             
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
