@@ -41,6 +41,7 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
                 .WithName("تاریخ تولد");
 
             RuleFor(x => x.Nationality)
+                .Matches("^[آ-یa-zA-Z]*$")
                 .MaximumLength(50)
                 .WithName("ملیت");
 

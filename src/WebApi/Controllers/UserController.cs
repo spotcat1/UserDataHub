@@ -39,7 +39,7 @@ namespace WebApi.Controllers
 
             var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode, Guid.Empty);
 
-            if (ExistGender && ReservedIdentityCode)
+            if (ExistGender && !ReservedIdentityCode)
             {
                 var Result = await _mediator.Send(new CreateUserCommand(dto));
                 return Ok(Result);
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
 
             var ReservedIdentityCode = await _userRepository.ReservedIdentityCode(dto.IdentityCode, id);
 
-            if (ExistGender && ExistUser && ReservedIdentityCode)
+            if (ExistGender && ExistUser && !ReservedIdentityCode)
             {
                 var Result = await _mediator.Send(new UpdateUserCommand(id,dto));
 

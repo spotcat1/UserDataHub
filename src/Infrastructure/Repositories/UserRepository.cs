@@ -57,10 +57,10 @@ namespace Infrastructure.Repositories
                 }
             }
 
-            if (userModel.BirthDate.Year < 1800 || userModel.BirthDate.Year > 2023)
-            {
-                throw new CustomException("خطا در ثبت تاریخ تولد");
-            }
+            //if (userModel.BirthDate.Year < 1800 || userModel.BirthDate.Year > 2023)
+            //{
+            //    throw new CustomException("خطا در ثبت تاریخ تولد");
+            //}
 
 
             var entity = _mapper.Map<UserEntity>(userModel);
@@ -94,7 +94,7 @@ namespace Infrastructure.Repositories
                 throw new CustomException("کد ملی متعلق به شخص دیگری است");
             }
 
-            return true;
+            return false;
         }
 
         public async Task<bool> GenderExistance(Guid genderId)
@@ -221,7 +221,7 @@ namespace Infrastructure.Repositories
 
             if (UserToReturn == null)
             {
-                throw new NotFoundException("User", Id);
+                throw new NotFoundException("کاربر یافت نشد");
             }
 
 
