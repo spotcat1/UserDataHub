@@ -1,9 +1,9 @@
 ﻿using Application.Exceptions;
 using Application.Wrappers;
-using Microsoft.AspNetCore.Http.HttpResults;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
+
 
 namespace WebApi.Filter
 {
@@ -27,17 +27,25 @@ namespace WebApi.Filter
                 
             }
 
-            else if (ExceptionType == typeof(CustomValidationException))
+            
+
+
+
+
+            else if (ExceptionType == typeof(ValidationException))
             {
-                var exception = (CustomValidationException)context.Exception;
+                var exception = (ValidationException)context.Exception;
                 context.Result = new BadRequestObjectResult(new CustomActionResult
                 {
                     Success = false,
-                    Errors = exception.Errors,
+                    Errors = exception.Errors
                 });
 
                 context.ExceptionHandled = true;
             }
+
+
+
 
             else if (ExceptionType == typeof(CustomException))
             {

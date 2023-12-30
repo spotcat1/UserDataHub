@@ -1,5 +1,6 @@
 ﻿
 
+using Application.Behaviours.User;
 using Application.Contracts;
 using FluentValidation;
 using Infrastructure.CrossCutting.Validations.UserValidation;
@@ -28,7 +29,7 @@ namespace Infrastructure
             services.AddMediatR(Options =>
             {
                 Options.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            });
+            }).AddScoped(typeof(IPipelineBehavior<,>), typeof(UserValidationBehaviour<,>));
             
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
