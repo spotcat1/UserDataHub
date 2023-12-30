@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Text.Json.Serialization;
+using Infrastructure.CrossCutting.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,5 +56,7 @@ app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseLogging();
 
 app.Run();
