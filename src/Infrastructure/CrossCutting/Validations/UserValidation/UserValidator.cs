@@ -19,13 +19,13 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .MaximumLength(50)
-                .Matches("^[آ-یa-zA-Z]*$")
+                .Matches("^[آ-یa-zA-Z]+( [آ-یa-zA-Z]+)?$")
                 .WithName("نام");
 
             RuleFor(x => x.LastName)
                 .NotEmpty()
                 .MaximumLength(50)
-                .Matches("^[آ-یa-zA-Z]*$")
+                .Matches("^[آ-یa-zA-Z]+( [آ-یa-zA-Z]+)?$")
                 .WithName("نام خانوادگی");
 
             RuleFor(x => x.IdentityCode)
@@ -41,7 +41,7 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
                 .WithName("تاریخ تولد");
 
             RuleFor(x => x.Nationality)
-                .Matches("^[آ-یa-zA-Z]*$")
+                .Matches("^[آ-یa-zA-Z]+( [آ-یa-zA-Z]+)?$")
                 .MaximumLength(50)
                 .WithName("ملیت");
 

@@ -7,6 +7,7 @@ using Application.Services.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 
 namespace Application.Services.Implementations
 {
@@ -25,16 +26,24 @@ namespace Application.Services.Implementations
         public async Task<Guid> AddUser(AddUpdateUserDto dto)
         {
 
+            if (dto.FirstName != null)
+            {
+                dto.FirstName = Regex.Replace(dto.FirstName.Trim(), @"\s+", " ");
+            }
 
+            if (dto.LastName != null)
+            {
+                dto.LastName = Regex.Replace(dto.LastName.Trim(), @"\s+", " ");
+            }
 
-
-            dto.FirstName = RemoveSpaces(dto.FirstName);
-            dto.LastName = RemoveSpaces(dto.LastName);
-            dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
+            if (dto.IdentityCode != null)
+            {
+                dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
+            }
 
             if (dto.Nationality != null)
             {
-                dto.Nationality = RemoveSpaces(dto.Nationality);
+                dto.Nationality = Regex.Replace(dto.Nationality.Trim(), @"\s+", " ");
             }
 
 
@@ -73,15 +82,25 @@ namespace Application.Services.Implementations
         {
 
 
-            dto.FirstName = RemoveSpaces(dto.FirstName);
-            dto.LastName = RemoveSpaces(dto.LastName);
-            dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
+            if (dto.FirstName != null)
+            {
+                dto.FirstName = Regex.Replace(dto.FirstName.Trim(), @"\s+", " ");
+            }
+
+            if (dto.LastName != null)
+            {
+                dto.LastName = Regex.Replace(dto.LastName.Trim(), @"\s+", " ");
+            }
+
+            if (dto.IdentityCode != null)
+            {
+                dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
+            }
 
             if (dto.Nationality != null)
             {
-                dto.Nationality = RemoveSpaces(dto.Nationality);
+                dto.Nationality = Regex.Replace(dto.Nationality.Trim(), @"\s+", " ");
             }
-
 
 
 

@@ -103,7 +103,7 @@ namespace Infrastructure.Repositories
 
             if (!FoundGender)
             {
-                throw new NotFoundException("User",genderId);
+                throw new NotFoundException("شناسه جنسیت یافت نشد");
             }
 
             return true;
@@ -111,7 +111,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> UserExistance(Guid UserId)
         {
-            var FoundUser = await _context.UserEntities.AnyAsync(x => x.Id == UserId && !x.IsDeleted);
+            var FoundUser = await _context.UserEntities.AnyAsync(x => x.Id == UserId );
 
             if (!FoundUser)
             {
@@ -130,7 +130,7 @@ namespace Infrastructure.Repositories
                 Directory.CreateDirectory(UploadRootPath);
             }
 
-            var foundUserToUpdate = _context.UserEntities.FirstOrDefault(x => x.Id == Id && !x.IsDeleted);
+            var foundUserToUpdate =  _context.UserEntities.FirstOrDefault(x => x.Id == Id);
 
             if (foundUserToUpdate == null)
             {
@@ -365,7 +365,7 @@ namespace Infrastructure.Repositories
              if (userToDelete != null)
              {
                  _context.UserEntities.Remove(userToDelete);
-                 _context.SaveChangesAsync();
+                 await _context.SaveChangesAsync();
 
                  return "کاربر با موفقیت حذف شد";
              }
