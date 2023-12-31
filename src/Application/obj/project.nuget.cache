@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MGD30xWJU0LAnhYGzQd17pyeHN7nAhAs7NOEUyT+/PFJFxIzDROlpHC7xnetRfrQJufoVRUPknl9px1NbFWVJQ==",
+  "dgSpecHash": "GLpU+H38GyhHwy/+w5PEh//w3oanCsPGz800wxIA/OVXjp3J8gPOCSvwU68LAcIN7YrmrjnP3AY72vjYW6SuNw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mahan_Owji\\source\\repos\\UserDataHub\\src\\Application\\Application.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
     "C:\\Users\\Mahan_Owji\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
   ],

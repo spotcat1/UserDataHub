@@ -29,8 +29,10 @@ namespace Infrastructure
             services.AddMediatR(Options =>
             {
                 Options.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            }).AddScoped(typeof(IPipelineBehavior<,>), typeof(UserValidationBehaviour<,>));
-            
+            }).AddScoped(typeof(IPipelineBehavior<,>), typeof(UserValidationBehaviour<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+
+
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddHttpContextAccessor();
