@@ -16,18 +16,18 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<UserEntity>, IUserRepository
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private const string ImagePath = "images/user";
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserRepository(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment webHostEnvironment,
-             IHttpContextAccessor httpContextAccessor)
+             IHttpContextAccessor httpContextAccessor) : base(context)
         {
-            _context = context;
+
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _httpContextAccessor = httpContextAccessor;
@@ -78,8 +78,8 @@ namespace Infrastructure.Repositories
                 entity.ImagePath = $"/{ImagePath}/{NewFileName}";
             }
 
-            await _context.UserEntities.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await AddAsync(entity);
+            await SaveChangesAsync();
 
             return entity.Id;
         }
@@ -87,7 +87,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> ReservedIdentityCode(string identitycode, Guid id)
         {
-            var FoundRegisteredIdentityCode=  await _context.UserEntities.AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted && x.Id != id);
+            var FoundRegisteredIdentityCode = await Table().AnyAsync(x => x.IdentityCode == identitycode && !x.IsDeleted && x.Id != id);
 
             if (FoundRegisteredIdentityCode)
             {
@@ -99,7 +99,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> GenderExistance(Guid genderId)
         {
-            var FoundGender =  await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
+            var FoundGender = await _context.GenderEntites.AnyAsync(x => x.Id == genderId && !x.IsDeleted);
 
             if (!FoundGender)
             {
@@ -111,7 +111,7 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> UserExistance(Guid UserId)
         {
-            var FoundUser = await _context.UserEntities.AnyAsync(x => x.Id == UserId );
+            var FoundUser = await Table().AnyAsync(x => x.Id == UserId);
 
             if (!FoundUser)
             {
@@ -130,7 +130,7 @@ namespace Infrastructure.Repositories
                 Directory.CreateDirectory(UploadRootPath);
             }
 
-            var foundUserToUpdate =  _context.UserEntities.FirstOrDefault(x => x.Id == Id);
+            var foundUserToUpdate = _context.UserEntities.FirstOrDefault(x => x.Id == Id);
 
             if (foundUserToUpdate == null)
             {
@@ -184,11 +184,10 @@ namespace Infrastructure.Repositories
             foundUserToUpdate.Nationality = userModel.Nationality;
             foundUserToUpdate.IsDeleted = userModel.IsDeleted;
 
-            var entity = _context.Entry(foundUserToUpdate);
-            entity.State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            Update(foundUserToUpdate);
+            await SaveChangesAsync();
             return "ویرایش با موفقیت انجام شد";
-           
+
         }
 
 
@@ -205,58 +204,47 @@ namespace Infrastructure.Repositories
 
         public async Task<UserModel> GetUserById(Guid Id, bool ShowIfIsDeleted = false)
         {
-            var UserToReturn = await _context.UserEntities
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == Id);
+            var userEntity = await GetUserByIdAsync(Id);
 
-           
-            if (!ShowIfIsDeleted)
-            {
-                UserToReturn = await _context.UserEntities
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
-            }
-
-
-
-            if (UserToReturn == null)
+            if (!ShowIfIsDeleted && userEntity != null && userEntity.IsDeleted)
             {
                 throw new NotFoundException("کاربر یافت نشد");
             }
 
-
-            var UserToReturnMapped = new UserModel
+            if (userEntity == null)
             {
-
-                GenderId = UserToReturn.GenderId,
-                FirstName = UserToReturn.FirstName,
-                LastName = UserToReturn.LastName,
-                IdentityCode = UserToReturn.IdentityCode,
-                BirthDate = UserToReturn.BirthDate,
-                ImageId = UserToReturn.ImagePath,
-                Nationality = UserToReturn.Nationality,
-            };
-
-
-
-            if (UserToReturnMapped.ImageId != null)
-            {
-                UserToReturnMapped.ImageId = BuildAbsoluteUrl(UserToReturnMapped.ImageId);
+                throw new NotFoundException("کاربر یافت نشد");
             }
 
-            return UserToReturnMapped;
+            var userMapped = new UserModel
+            {
+                GenderId = userEntity.GenderId,
+                FirstName = userEntity.FirstName,
+                LastName = userEntity.LastName,
+                IdentityCode = userEntity.IdentityCode,
+                BirthDate = userEntity.BirthDate,
+                ImageId = userEntity.ImagePath,
+                Nationality = userEntity.Nationality,
+            };
+
+            if (userMapped.ImageId != null)
+            {
+                userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
+            }
+
+            return userMapped;
         }
 
 
-        public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn=null, string? FirstFilterQuery = null,
+        public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
             string? SecondFilterOn = null, string? SecondFilterQuery = null,
             string? FirstOrderBy = null, bool FirstIsAscending = true,
             string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
             int PageNumber = 1, int PageSize = 100)
         {
-           
+
             var UsersToReturn = _context.UserEntities.AsNoTracking().AsQueryable();
-               
+
 
 
             //Filtering 
@@ -285,12 +273,12 @@ namespace Infrastructure.Repositories
             {
                 if (FirstOrderBy.Equals("نامخانوادگی"))
                 {
-                    UsersToReturn = FirstIsAscending ? UsersToReturn.OrderBy(x=>x.LastName):UsersToReturn.OrderByDescending(x=>x.LastName);
+                    UsersToReturn = FirstIsAscending ? UsersToReturn.OrderBy(x => x.LastName) : UsersToReturn.OrderByDescending(x => x.LastName);
                 }
 
                 if (!string.IsNullOrWhiteSpace(SecondOrderBy))
                 {
-                    if (SecondOrderBy.Equals("نام") && FirstIsAscending == true )   
+                    if (SecondOrderBy.Equals("نام") && FirstIsAscending == true)
                     {
                         UsersToReturn = SecondIsAscending
                             ? UsersToReturn.OrderBy(x => x.LastName).ThenBy(x => x.FirstName) :
@@ -328,7 +316,7 @@ namespace Infrastructure.Repositories
                 }
             }
 
-            return  UsersMapped.Skip(SkipResult).Take(PageSize).ToList();
+            return UsersMapped.Skip(SkipResult).Take(PageSize).ToList();
         }
 
 
@@ -341,16 +329,11 @@ namespace Infrastructure.Repositories
 
         public async Task<string> SoftDeleteUser(Guid id)
         {
-            var UserToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
-
-            if (UserToDelete == null)
-            {
-                throw new NotFoundException("کاربر برای حذف منطقی یافت نشد");
-            }
+            var UserToDelete = await GetUserByIdAsync(id);        
 
             UserToDelete.IsDeleted = true;
 
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return "کاربر با موفقیت حذف منطقی شد";
 
@@ -360,27 +343,13 @@ namespace Infrastructure.Repositories
 
         public async Task<string> DeleteUser(Guid id)
         {
-             var userToDelete = await _context.UserEntities.FirstOrDefaultAsync(x => x.Id == id);
+            var userToDelete = await GetUserByIdAsync(id);
+         
+             Remove(userToDelete);
+             await SaveChangesAsync();
 
-             if (userToDelete != null)
-             {
-                 _context.UserEntities.Remove(userToDelete);
-                 await _context.SaveChangesAsync();
-
-                 return "کاربر با موفقیت حذف شد";
-             }
-             else
-             {
-                throw new NotFoundException("کاربر برای حذف یافت نشد");
-             }
-           
-             
-             
+             return "کاربر با موفقیت حذف شد";
             
         }
-
-
-
-
     }
 }

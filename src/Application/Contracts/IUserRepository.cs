@@ -1,11 +1,12 @@
 ﻿
 
 using Application.Dto_s.UserDto;
+using Domain.Entities;
 using Domain.Models;
 
 namespace Application.Contracts
 {
-    public interface IUserRepository
+    public interface IUserRepository:IGenericRepository<UserEntity>
     {
         Task<Guid> AddUser(UserModel userModel);
 

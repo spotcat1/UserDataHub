@@ -37,6 +37,8 @@ namespace Infrastructure
 
             services.AddHttpContextAccessor();
 
+            services.AddTransient((typeof(IGenericRepository<>)),(typeof(GenericRepository<>)));
+
             return services;
         }
     }
