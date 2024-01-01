@@ -18,6 +18,6 @@ namespace Domain.Models
         public bool IsDeleted { get; set; }
 
 
-        public UserModel? UserModel { get; set; }
+        
     }
 }

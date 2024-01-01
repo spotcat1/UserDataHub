@@ -19,11 +19,11 @@ namespace Infrastructure.Persistants.Configurations
             builder.HasData(new GenderEntity
             {
                 Id = Guid.NewGuid(),
-                Title = "Male"
+                Title = "مرد"
             }, new GenderEntity
             {
                 Id= Guid.NewGuid(),
-                Title= "Female"
+                Title= "زن"
             });
         }
     }

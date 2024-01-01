@@ -58,11 +58,7 @@ namespace Infrastructure.Repositories
                 }
             }
 
-            //if (userModel.BirthDate.Year < 1800 || userModel.BirthDate.Year > 2023)
-            //{
-            //    throw new CustomException("خطا در ثبت تاریخ تولد");
-            //}
-
+          
 
             var entity = _mapper.Map<UserEntity>(userModel);
 
@@ -205,48 +201,47 @@ namespace Infrastructure.Repositories
 
         public async Task<UserModel> GetUserById(Guid Id, bool ShowIfIsDeleted = false)
         {
-            var userEntity = await _context.UserEntities.Include(x => x.Gender).FirstOrDefaultAsync(x=>x.Id==Id);
+            var userEntityQuery = _context.UserEntities.AsQueryable();
 
-            if (!ShowIfIsDeleted && userEntity != null)
+            if (!ShowIfIsDeleted)
             {
-                userEntity= await _context.UserEntities.Include(x => x.Gender).FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
+                userEntityQuery = userEntityQuery.Where(x => !x.IsDeleted);
             }
+
+            var userEntity = await userEntityQuery
+                .Include(x => x.Gender) // Include the Gender navigation property
+                .FirstOrDefaultAsync(x => x.Id == Id);
 
             if (userEntity == null)
             {
                 throw new NotFoundException("کاربر یافت نشد");
             }
 
-            try
-            {
-                var userMapped = _mapper.Map<UserModel>(userEntity);
-                // Rest of the code after mapping
-                if (userMapped.ImageId != null)
-                {
-                    userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
-                }
 
-                return userMapped;
-            }
-            catch (Exception ex)
+            var userMapped = _mapper.Map<UserModel>(userEntity);
+
+
+            if (userMapped.ImageId != null)
             {
-                // Log or handle the exception
-                Console.WriteLine($"An error occurred during mapping: {ex.Message}");
-                throw; // Rethrow the exception to propagate it further if needed
+                userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
             }
 
-       
+            return userMapped;
+
+
+
         }
 
 
+
         public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
-    string? SecondFilterOn = null, string? SecondFilterQuery = null,
-    string? FirstOrderBy = null, bool FirstIsAscending = true,
-    string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
-    int PageNumber = 1, int PageSize = 100)
+        string? SecondFilterOn = null, string? SecondFilterQuery = null,
+        string? FirstOrderBy = null, bool FirstIsAscending = true,
+        string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
+        int PageNumber = 1, int PageSize = 100)
         {
 
-            var UsersToReturn =  _context.UserEntities.Include(x => x.Gender).AsQueryable(); // Remove AsNoTracking()
+            var UsersToReturn = _context.UserEntities.Include(x => x.Gender).AsQueryable(); // Remove AsNoTracking()
 
             // Filtering
             if (!string.IsNullOrWhiteSpace(FirstFilterOn) && !string.IsNullOrWhiteSpace(FirstFilterQuery))
@@ -301,36 +296,25 @@ namespace Infrastructure.Repositories
             var SkipResult = (PageNumber - 1) * PageSize;
 
 
-            try
+            var usersList = await UsersToReturn.Include(x => x.Gender).Skip(SkipResult).Take(PageSize).ToListAsync();
+
+            var UsersMapped = new List<UserModel>();
+
+            foreach (var userEntity in usersList)
             {
-                var usersList = await UsersToReturn.Include(x => x.Gender).Skip(SkipResult).Take(PageSize).ToListAsync();
+                var userMapped = _mapper.Map<UserModel>(userEntity);
 
-
-                var UsersMapped = _mapper.Map<List<UserModel>>(usersList);
-
-                foreach (var property in UsersMapped)
+                if (userMapped.ImageId != null)
                 {
-                    if (property.ImageId != null)
-                    {
-                        property.ImageId = BuildAbsoluteUrl(property.ImageId);
-                    }
+                    userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
                 }
 
-                return UsersMapped;
+                UsersMapped.Add(userMapped);
             }
-            catch (AutoMapperMappingException ex)
-            {
-                // Log or handle the AutoMapperMappingException
-                // You can access more details about the exception, such as ex.Errors, ex.Context, etc.
-                // Log.Error(ex, "An error occurred during AutoMapper mapping");
-                throw; // Rethrow the exception to let the caller handle it or log it further
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions if necessary
-                // Log.Error(ex, "An unexpected error occurred");
-                throw; // Rethrow the exception to let the caller handle it or log it further
-            }
+
+            return UsersMapped;
+
+
 
 
         }
@@ -346,7 +330,7 @@ namespace Infrastructure.Repositories
 
         public async Task<string> SoftDeleteUser(Guid id)
         {
-            var UserToDelete = await GetUserByIdAsync(id);        
+            var UserToDelete = await GetUserByIdAsync(id);
 
             UserToDelete.IsDeleted = true;
 
@@ -361,12 +345,12 @@ namespace Infrastructure.Repositories
         public async Task<string> DeleteUser(Guid id)
         {
             var userToDelete = await GetUserByIdAsync(id);
-         
-             Remove(userToDelete);
-             await SaveChangesAsync();
 
-             return "کاربر با موفقیت حذف شد";
-            
+            Remove(userToDelete);
+            await SaveChangesAsync();
+
+            return "کاربر با موفقیت حذف شد";
+
         }
     }
 }

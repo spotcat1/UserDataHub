@@ -6,11 +6,7 @@ namespace Domain.Models
 {
     public class UserModel:BaseModel
     {
-        public UserModel()
-        {
-            CarModels = new List<CarModel>();
-            UserCompanyModelJunks = new List<UserCompanyModelJunk>();
-        }
+        
         public Guid GenderId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
@@ -25,7 +21,7 @@ namespace Domain.Models
 
         public bool IsDeleted { get; set; }
 
-        public string UserGenderName { get; set; }
+        public string GenderEntityTitle { get; set; }
 
         
 
@@ -33,9 +29,6 @@ namespace Domain.Models
 
 
 
-        public  GenderModel Gender { get; set; }
-        public ICollection<CarModel> CarModels { get; set; }
-
-        public ICollection<UserCompanyModelJunk> UserCompanyModelJunks { get; set; }
+      
     }
 }

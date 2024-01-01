@@ -149,7 +149,7 @@ namespace Application.Services.Implementations
 
             var UserToReturnDto = new GetUserbyIdDto
             {
-                GenderTitle = UserToReturn.Gender.Title,
+                GenderTitle = UserToReturn.GenderEntityTitle,
                 FirstName = UserToReturn.FirstName,
                 LastName = UserToReturn.LastName,
                 BirthDate = UserToReturn.BirthDate,
@@ -205,13 +205,15 @@ namespace Application.Services.Implementations
 
             var UsersToReturn = await _userRepository.GetAllUsers(FirstFilterOn, FirstFilterQuery, SecondFilterOn, SecondFilterQuery,FirstOrderBy,FirstIsAscending,
                 SecondOrderBy,SecondIsAscending, ShowDeletedOnes,PageNumber,PageSize);
+
             var listOfUsersDto = new List<GetAllUsersDto>();
+
             foreach (var user in UsersToReturn)
             {
                 var Users = new GetAllUsersDto()
                 {
                     Id = user.Id,
-                    GenderTitle = user.UserGenderName,
+                    GenderTitle = user.GenderEntityTitle,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     BirthDate = user.BirthDate,
