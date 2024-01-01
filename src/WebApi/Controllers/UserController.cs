@@ -16,13 +16,13 @@ namespace WebApi.Controllers
     [ExceptionFilter]
     public class UserController : ControllerBase
     {
-        private readonly IUser _user;
+        
         private readonly IUserRepository _userRepository;
         private readonly IMediator _mediator;
 
-        public UserController(IUser user, IUserRepository userRepositor, IMediator mediator)
+        public UserController(IUserRepository userRepositor, IMediator mediator)
         {
-            _user = user;
+            
             _userRepository = userRepositor;
             _mediator = mediator;
         }
