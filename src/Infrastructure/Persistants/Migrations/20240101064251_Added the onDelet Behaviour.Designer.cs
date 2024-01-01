@@ -4,6 +4,7 @@ using Infrastructure.Persistants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistants.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240101064251_Added the onDelet Behaviour")]
+    partial class AddedtheonDeletBehaviour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace Infrastructure.Persistants.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -114,13 +117,13 @@ namespace Infrastructure.Persistants.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fd96cc7e-e491-4fd5-9912-51a2a6d1f1ce"),
+                            Id = new Guid("c77625fc-d4e2-4c13-a947-1d0c5f239c6f"),
                             IsDeleted = false,
                             Title = "Male"
                         },
                         new
                         {
-                            Id = new Guid("986f7961-bb9e-480b-ae63-d63f5632c561"),
+                            Id = new Guid("0bb2c043-3e14-4dd3-9916-de0c6967df0d"),
                             IsDeleted = false,
                             Title = "Female"
                         });
@@ -132,13 +135,13 @@ namespace Infrastructure.Persistants.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -202,7 +205,8 @@ namespace Infrastructure.Persistants.Migrations
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("Cars")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -211,12 +215,15 @@ namespace Infrastructure.Persistants.Migrations
                 {
                     b.HasOne("Domain.Entities.CompanyEntity", "Company")
                         .WithMany("CompanyUserJunks")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("UserCompanyjunks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Company");
 

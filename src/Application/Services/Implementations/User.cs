@@ -149,7 +149,7 @@ namespace Application.Services.Implementations
 
             var UserToReturnDto = new GetUserbyIdDto
             {
-                GenderId = UserToReturn.GenderId,
+                GenderTitle = UserToReturn.Gender.Title,
                 FirstName = UserToReturn.FirstName,
                 LastName = UserToReturn.LastName,
                 BirthDate = UserToReturn.BirthDate,
@@ -211,7 +211,7 @@ namespace Application.Services.Implementations
                 var Users = new GetAllUsersDto()
                 {
                     Id = user.Id,
-                    Genderid = user.GenderId,
+                    GenderTitle = user.UserGenderName,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     BirthDate = user.BirthDate,

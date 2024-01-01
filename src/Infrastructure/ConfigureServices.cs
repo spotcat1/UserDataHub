@@ -22,7 +22,7 @@ namespace Infrastructure
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            ValidatorOptions.Global.LanguageManager = new UserValidatorFluentCustomLanguage();
+            ValidatorOptions.Global.LanguageManager = new ValidatorFluentCustomLanguage();
 
             services.AddScoped<IUserRepository,UserRepository>();
 

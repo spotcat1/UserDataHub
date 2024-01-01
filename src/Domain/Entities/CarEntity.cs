@@ -5,11 +5,11 @@ namespace Domain.Entities
 {
     public class CarEntity:BaseEntity
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public required string Name { get; set; }
         public required string Model { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public required DateTime CreatedDate { get; set; }
 
         public double Price { get; set; }
 

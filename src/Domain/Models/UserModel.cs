@@ -16,7 +16,7 @@ namespace Domain.Models
         public required string LastName { get; set; }
         public required string IdentityCode { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; }
 
         public IFormFile? ImageFile { get; set; }
         public string? ImageId { get; set; }    
@@ -24,6 +24,8 @@ namespace Domain.Models
         public string? Nationality { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public string UserGenderName { get; set; }
 
         
 

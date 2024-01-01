@@ -11,12 +11,12 @@ namespace Domain.Entities
             Cars = new List<CarEntity>();
             UserCompanyjunks = new List<UserCompanyEntityJunk>();
         }
-        public Guid GenderId { get; set; }
+        public required Guid GenderId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string IdentityCode { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        public required DateTime BirthDate { get; set; }
 
         public string? ImagePath { get; set; }
 

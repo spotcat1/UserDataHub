@@ -1,6 +1,7 @@
 ﻿using Application.Contracts;
 using Application.Dto_s.UserDto;
 using Application.Exceptions;
+using Application.Helper;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Models;
@@ -179,7 +180,7 @@ namespace Infrastructure.Repositories
             foundUserToUpdate.GenderId = userModel.GenderId;
             foundUserToUpdate.FirstName = userModel.FirstName;
             foundUserToUpdate.LastName = userModel.LastName;
-            foundUserToUpdate.BirthDate = userModel.BirthDate;
+            foundUserToUpdate.BirthDate = userModel.BirthDate.ConvertToMiladi();
             foundUserToUpdate.IdentityCode = userModel.IdentityCode;
             foundUserToUpdate.Nationality = userModel.Nationality;
             foundUserToUpdate.IsDeleted = userModel.IsDeleted;
@@ -204,11 +205,11 @@ namespace Infrastructure.Repositories
 
         public async Task<UserModel> GetUserById(Guid Id, bool ShowIfIsDeleted = false)
         {
-            var userEntity = await GetUserByIdAsync(Id);
+            var userEntity = await _context.UserEntities.Include(x => x.Gender).FirstOrDefaultAsync(x=>x.Id==Id);
 
-            if (!ShowIfIsDeleted && userEntity != null && userEntity.IsDeleted)
+            if (!ShowIfIsDeleted && userEntity != null)
             {
-                throw new NotFoundException("کاربر یافت نشد");
+                userEntity= await _context.UserEntities.Include(x => x.Gender).FirstOrDefaultAsync(x => x.Id == Id && !x.IsDeleted);
             }
 
             if (userEntity == null)
@@ -216,39 +217,38 @@ namespace Infrastructure.Repositories
                 throw new NotFoundException("کاربر یافت نشد");
             }
 
-            var userMapped = new UserModel
+            try
             {
-                GenderId = userEntity.GenderId,
-                FirstName = userEntity.FirstName,
-                LastName = userEntity.LastName,
-                IdentityCode = userEntity.IdentityCode,
-                BirthDate = userEntity.BirthDate,
-                ImageId = userEntity.ImagePath,
-                Nationality = userEntity.Nationality,
-            };
+                var userMapped = _mapper.Map<UserModel>(userEntity);
+                // Rest of the code after mapping
+                if (userMapped.ImageId != null)
+                {
+                    userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
+                }
 
-            if (userMapped.ImageId != null)
+                return userMapped;
+            }
+            catch (Exception ex)
             {
-                userMapped.ImageId = BuildAbsoluteUrl(userMapped.ImageId);
+                // Log or handle the exception
+                Console.WriteLine($"An error occurred during mapping: {ex.Message}");
+                throw; // Rethrow the exception to propagate it further if needed
             }
 
-            return userMapped;
+       
         }
 
 
         public async Task<List<UserModel>> GetAllUsers(string? FirstFilterOn = null, string? FirstFilterQuery = null,
-            string? SecondFilterOn = null, string? SecondFilterQuery = null,
-            string? FirstOrderBy = null, bool FirstIsAscending = true,
-            string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
-            int PageNumber = 1, int PageSize = 100)
+    string? SecondFilterOn = null, string? SecondFilterQuery = null,
+    string? FirstOrderBy = null, bool FirstIsAscending = true,
+    string? SecondOrderBy = null, bool SecondIsAscending = true, bool ShowDeletedOnes = false,
+    int PageNumber = 1, int PageSize = 100)
         {
 
-            var UsersToReturn = _context.UserEntities.AsNoTracking().AsQueryable();
+            var UsersToReturn =  _context.UserEntities.Include(x => x.Gender).AsQueryable(); // Remove AsNoTracking()
 
-
-
-            //Filtering 
-
+            // Filtering
             if (!string.IsNullOrWhiteSpace(FirstFilterOn) && !string.IsNullOrWhiteSpace(FirstFilterQuery))
             {
                 if (FirstFilterOn.Equals("نامخانوادگی"))
@@ -256,7 +256,6 @@ namespace Infrastructure.Repositories
                     UsersToReturn = UsersToReturn.Where(x => x.LastName.Contains(FirstFilterQuery));
                 }
             }
-
 
             if (!string.IsNullOrWhiteSpace(SecondFilterOn) && !string.IsNullOrWhiteSpace(SecondFilterQuery))
             {
@@ -266,9 +265,7 @@ namespace Infrastructure.Repositories
                 }
             }
 
-
-            //sort
-
+            // Sorting
             if (!string.IsNullOrWhiteSpace(FirstOrderBy))
             {
                 if (FirstOrderBy.Equals("نامخانوادگی"))
@@ -281,43 +278,63 @@ namespace Infrastructure.Repositories
                     if (SecondOrderBy.Equals("نام") && FirstIsAscending == true)
                     {
                         UsersToReturn = SecondIsAscending
-                            ? UsersToReturn.OrderBy(x => x.LastName).ThenBy(x => x.FirstName) :
-                            UsersToReturn.OrderBy(x => x.LastName).ThenByDescending(x => x.FirstName);
+                            ? UsersToReturn.OrderBy(x => x.FirstName)
+                            : UsersToReturn.OrderBy(x => x.FirstName);
                     }
 
                     if (SecondOrderBy.Equals("نام") && !FirstIsAscending)
                     {
-                        UsersToReturn =
-                            UsersToReturn = SecondIsAscending
-                            ? UsersToReturn.OrderByDescending(x => x.LastName).ThenBy(x => x.FirstName) :
-                            UsersToReturn.OrderByDescending(x => x.LastName).ThenByDescending(x => x.FirstName);
+                        UsersToReturn = SecondIsAscending
+                            ? UsersToReturn.OrderBy(x => x.FirstName)
+                            : UsersToReturn.OrderByDescending(x => x.FirstName);
                     }
                 }
             }
 
+            // ShowDeletedOnes
             if (!ShowDeletedOnes)
             {
                 UsersToReturn = UsersToReturn.Where(x => !x.IsDeleted);
             }
 
+            // Paging
             var SkipResult = (PageNumber - 1) * PageSize;
 
 
-
-            var UsersMapped = _mapper.Map<List<UserModel>>(UsersToReturn);
-
-
-
-            foreach (var property in UsersMapped)
+            try
             {
-                if (property.ImageId != null)
+                var usersList = await UsersToReturn.Include(x => x.Gender).Skip(SkipResult).Take(PageSize).ToListAsync();
+
+
+                var UsersMapped = _mapper.Map<List<UserModel>>(usersList);
+
+                foreach (var property in UsersMapped)
                 {
-                    property.ImageId = BuildAbsoluteUrl(property.ImageId);
+                    if (property.ImageId != null)
+                    {
+                        property.ImageId = BuildAbsoluteUrl(property.ImageId);
+                    }
                 }
+
+                return UsersMapped;
+            }
+            catch (AutoMapperMappingException ex)
+            {
+                // Log or handle the AutoMapperMappingException
+                // You can access more details about the exception, such as ex.Errors, ex.Context, etc.
+                // Log.Error(ex, "An error occurred during AutoMapper mapping");
+                throw; // Rethrow the exception to let the caller handle it or log it further
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions if necessary
+                // Log.Error(ex, "An unexpected error occurred");
+                throw; // Rethrow the exception to let the caller handle it or log it further
             }
 
-            return UsersMapped.Skip(SkipResult).Take(PageSize).ToList();
+
         }
+
 
 
         private string BuildAbsoluteUrl(string relativeImagePath)

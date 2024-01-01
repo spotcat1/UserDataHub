@@ -41,7 +41,8 @@ namespace Infrastructure.Persistants.Configurations
             builder
                 .HasOne(x => x.Gender)
                 .WithMany(x => x.Users)
-                .HasForeignKey(x => x.GenderId);
+                .HasForeignKey(x => x.GenderId)
+                .OnDelete(DeleteBehavior.NoAction);
                 
 
         }

@@ -9,6 +9,10 @@ namespace Infrastructure.Persistants.Configurations
 
             builder.HasKey(x => x.Id);
 
+            builder
+                .Property(x => x.UserId)
+                .IsRequired(false);   
+
             builder.Property(x => x.Name)
                 .HasMaxLength(500)
                 .IsRequired();
@@ -33,7 +37,8 @@ namespace Infrastructure.Persistants.Configurations
             builder
                 .HasOne(x => x.User)
                 .WithMany(x => x.Cars)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
 

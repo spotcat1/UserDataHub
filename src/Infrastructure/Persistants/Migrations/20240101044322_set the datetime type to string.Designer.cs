@@ -4,6 +4,7 @@ using Infrastructure.Persistants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistants.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240101044322_set the datetime type to string")]
+    partial class setthedatetimetypetostring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,8 +32,10 @@ namespace Infrastructure.Persistants.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("ImagePath")
                         .HasMaxLength(5000)
@@ -52,7 +57,7 @@ namespace Infrastructure.Persistants.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -68,8 +73,10 @@ namespace Infrastructure.Persistants.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreationDate")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("Field")
                         .IsRequired()
@@ -114,13 +121,13 @@ namespace Infrastructure.Persistants.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fd96cc7e-e491-4fd5-9912-51a2a6d1f1ce"),
+                            Id = new Guid("c51c3c4a-71e0-495a-a907-b0c46c5f4b70"),
                             IsDeleted = false,
                             Title = "Male"
                         },
                         new
                         {
-                            Id = new Guid("986f7961-bb9e-480b-ae63-d63f5632c561"),
+                            Id = new Guid("9b4244b5-01d1-4982-9ce2-0dafc4a139cf"),
                             IsDeleted = false,
                             Title = "Female"
                         });
@@ -132,13 +139,13 @@ namespace Infrastructure.Persistants.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -156,8 +163,10 @@ namespace Infrastructure.Persistants.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("BirthDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("BirthDate")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -202,7 +211,8 @@ namespace Infrastructure.Persistants.Migrations
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("Cars")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -211,12 +221,15 @@ namespace Infrastructure.Persistants.Migrations
                 {
                     b.HasOne("Domain.Entities.CompanyEntity", "Company")
                         .WithMany("CompanyUserJunks")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.UserEntity", "User")
                         .WithMany("UserCompanyjunks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
@@ -228,7 +241,7 @@ namespace Infrastructure.Persistants.Migrations
                     b.HasOne("Domain.Entities.GenderEntity", "Gender")
                         .WithMany("Users")
                         .HasForeignKey("GenderId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Gender");

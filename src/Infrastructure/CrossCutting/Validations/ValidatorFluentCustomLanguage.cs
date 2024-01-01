@@ -2,9 +2,9 @@
 
 namespace Infrastructure.CrossCutting.Validations.UserValidation
 {
-    public class UserValidatorFluentCustomLanguage : FluentValidation.Resources.LanguageManager
+    public class ValidatorFluentCustomLanguage : FluentValidation.Resources.LanguageManager
     {
-        public UserValidatorFluentCustomLanguage()
+        public ValidatorFluentCustomLanguage()
         {
             Culture = new System.Globalization.CultureInfo("fa-IR");
 

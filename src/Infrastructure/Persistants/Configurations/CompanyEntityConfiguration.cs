@@ -10,6 +10,7 @@ namespace Infrastructure.Persistants.Configurations
 
             builder.HasKey(x => x.Id);
 
+
             builder.Property(x => x.Name)
                 .HasMaxLength(500)
                 .IsRequired();
@@ -23,6 +24,9 @@ namespace Infrastructure.Persistants.Configurations
                 .IsRequired();
 
             builder.Property(x=>x.CreationDate)
+                .IsRequired();
+
+            builder.Property(x=>x.IsDeleted)
                 .IsRequired();
         }
     }

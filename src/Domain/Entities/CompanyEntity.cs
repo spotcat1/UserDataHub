@@ -13,7 +13,7 @@ namespace Domain.Entities
         public required string Field { get; set; }
         public required string NumberOfEmployees { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public required DateTime CreationDate { get; set; }
 
         public bool IsDeleted { get; set; }
 

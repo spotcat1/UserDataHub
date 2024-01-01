@@ -11,7 +11,7 @@ namespace Application.Dto_s.UserDto
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string IdentityCode { get; set; }
-        public DateTime BirthDate { get; set; }
+        public required string BirthDate { get; set; }
         public IFormFile? ImageFile { get; set; }
         public string? Nationality { get; set; }
 

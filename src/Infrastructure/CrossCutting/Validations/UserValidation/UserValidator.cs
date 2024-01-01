@@ -3,6 +3,7 @@
 using Application.Dto_s.UserDto;
 using Application.Exceptions;
 using FluentValidation;
+using System.Globalization;
 
 namespace Infrastructure.CrossCutting.Validations.UserValidation
 {
@@ -37,7 +38,7 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
 
             RuleFor(x => x.BirthDate)
                 .NotEmpty()
-                .Must(ValidateBirthDate)
+                .Must(BeValidShamsiDate)
                 .WithName("تاریخ تولد");
 
             RuleFor(x => x.Nationality)
@@ -49,17 +50,18 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
         }
 
 
-        private bool ValidateBirthDate(DateTime birthDate)
+        private bool BeValidShamsiDate(string date)
         {
+            PersianCalendar persianCalendar = new PersianCalendar();
 
-            bool IsValid = birthDate.Year >= 1800 && birthDate.Year <= DateTime.Now.Year && // Ensure the year is after 1800 and not in the future
-                   birthDate.Month >= 1 && birthDate.Month <= 12 && // Ensure the month is between 1 and 12
-                   birthDate.Day >= 1 && birthDate.Day <= 30; // Ensure the day is between 1 and 30
-
-
-
-
-            return IsValid;
+            // Check if the string can be parsed as a valid Shamsi (Persian) date
+            return DateTime.TryParseExact(date, "yyyy/MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate)
+                && parsedDate.Year >= persianCalendar.MinSupportedDateTime.Year
+                && parsedDate.Year <= persianCalendar.MaxSupportedDateTime.Year
+                && parsedDate.Month >= 1
+                && parsedDate.Month <= 12
+                && parsedDate.Day >= 1
+                && parsedDate.Day <= persianCalendar.GetDaysInMonth(parsedDate.Year, parsedDate.Month);
         }
 
 

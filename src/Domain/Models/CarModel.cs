@@ -10,7 +10,7 @@ namespace Domain.Models
         public required string Name { get; set; }
         public required string Model { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public required string  CreatedDate { get; set; }
 
         public double Price { get; set; }
 
