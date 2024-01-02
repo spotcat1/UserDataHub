@@ -2,23 +2,20 @@
 
 using Application.Contracts;
 using Application.Dto_s.UserDto;
-using Application.Exceptions;
 using Application.Services.Interfaces;
 using Domain.Models;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using System.Text.RegularExpressions;
+
 
 namespace Application.Services.Implementations
 {
     public class User : IUser
     {
-        //private readonly IValidator<AddUpdateUserDto> _validator;
+        
         private readonly IUserRepository _userRepository;
 
         public User( IUserRepository userRepository)
         {
-            //_validator = validator;
+            
             _userRepository = userRepository;
 
         }
@@ -26,38 +23,10 @@ namespace Application.Services.Implementations
         public async Task<Guid> AddUser(AddUpdateUserDto dto)
         {
 
-            //if (dto.FirstName != null)
-            //{
-            //    dto.FirstName = Regex.Replace(dto.FirstName.Trim(), @"\s+", " ");
-            //}
-
-            //if (dto.LastName != null)
-            //{
-            //    dto.LastName = Regex.Replace(dto.LastName.Trim(), @"\s+", " ");
-            //}
-
             if (dto.IdentityCode != null)
             {
                 dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
             }
-
-            //if (dto.Nationality != null)
-            //{
-            //    dto.Nationality = Regex.Replace(dto.Nationality.Trim(), @"\s+", " ");
-            //}
-
-
-
-            //var ValidationResult = _validator.Validate(dto);
-
-            //if (!ValidationResult.IsValid)
-            //{
-            //    throw new CustomValidationException(ValidationResult.Errors);
-            //}
-
-
-
-
 
             var UserInstanceModel = new UserModel
             {
@@ -82,37 +51,11 @@ namespace Application.Services.Implementations
         {
 
 
-            //if (dto.FirstName != null)
-            //{
-            //    dto.FirstName = Regex.Replace(dto.FirstName.Trim(), @"\s+", " ");
-            //}
-
-            //if (dto.LastName != null)
-            //{
-            //    dto.LastName = Regex.Replace(dto.LastName.Trim(), @"\s+", " ");
-            //}
 
             if (dto.IdentityCode != null)
             {
                 dto.IdentityCode = RemoveSpaces(dto.IdentityCode);
             }
-
-            //if (dto.Nationality != null)
-            //{
-            //    dto.Nationality = Regex.Replace(dto.Nationality.Trim(), @"\s+", " ");
-            //}
-
-
-
-            //var ValidationResult = _validator.Validate(dto);
-
-            //if (!ValidationResult.IsValid)
-            //{
-            //    throw new CustomValidationException(ValidationResult.Errors);
-            //}
-
-
-
 
 
             var UserInstanceModel = new UserModel

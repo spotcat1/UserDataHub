@@ -7,7 +7,7 @@ namespace Domain.Models
 {
     public class CarModel : BaseModel
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
 
         public string? UserLastName {get;set;}
         public string? UserIdentityCode {get;set;}
@@ -23,6 +23,11 @@ namespace Domain.Models
         public bool IsDeleted { get; set; }
 
 
+
+
+
+
+        public UserModel User { get; set; }
         
     }
 }

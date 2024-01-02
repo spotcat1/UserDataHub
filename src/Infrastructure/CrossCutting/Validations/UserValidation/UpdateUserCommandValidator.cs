@@ -14,7 +14,8 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
             RuleFor(x => x.dto)
                 .NotEmpty()
                 .SetValidator(new UserValidator())
-                .WithName("مدل");
+                .WithName("مدل")
+                .WithMessage("خطا در مدل فرستاده شدخ");
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Application.Dto_s.CarDto;
+﻿using Application.Commands;
+using Application.Contracts;
+using Application.Dto_s.CarDto;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +16,14 @@ namespace WebApi.Controllers
     public class CarController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ICarRepository _carRepository;
 
-        public CarController(IMediator mediator)
+        public CarController(IMediator mediator, ICarRepository carRepository)
         {
             _mediator = mediator;
+            _carRepository = carRepository;
         }
+
 
 
         [HttpPost]
@@ -27,7 +32,17 @@ namespace WebApi.Controllers
 
         public async Task<ActionResult<Guid>> AddCarV1([FromForm] AddUpdateCarDto dto)
         {
-            throw new NotImplementedException();
+
+
+            var ExistUser = await _carRepository.UserExsistance(dto.UserId);
+
+            if (ExistUser)
+            {
+                var Result = await _mediator.Send(new CreateCarCommand(dto));
+                return Ok(Result);
+            }
+
+            return Guid.Empty;
         }
 
         [HttpPut("{Id}")]
@@ -35,7 +50,17 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<string>> UpdateCarV1([FromRoute] Guid Id, [FromForm] AddUpdateCarDto dto)
         {
-            throw new NotImplementedException();
+            var CarExistance = await _carRepository.CarExsistance(Id);
+
+            var ExistUser = await _carRepository.UserExsistance(dto.UserId);
+
+            if (CarExistance)
+            {
+                var Result = await _mediator.Send(new UpdateCarCommand(Id, dto));
+                return Ok(Result);
+            }
+
+            return "خطا";
         }
 
         [HttpGet("{Id}")]
@@ -55,7 +80,11 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<List<GetAllCarsDto>>> GetAllCarsV1()
+        public async Task<ActionResult<List<GetAllCarsDto>>> GetAllCarsV1([FromQuery] string? FirstFilterOn, [FromQuery] string? FirstFilterQuery,
+            [FromQuery] string? SecondFilterOn, [FromQuery] string? SecondFilterQuery,
+            [FromQuery] string? FirstOrderBy, [FromQuery] bool? FirstIsAscending,
+            [FromQuery] bool? ShowDeletedOnes,
+            [FromQuery] int PageNumber = 1, [FromQuery] int PageSize = 100)
         {
             throw new NotImplementedException();
         }

@@ -1,7 +1,6 @@
 ﻿
 
 using Application.Commands;
-using Application.Dto_s.UserDto;
 using FluentValidation;
 
 namespace Infrastructure.CrossCutting.Validations.UserValidation
@@ -16,7 +15,8 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
             RuleFor(x => x.dto)
                 .NotEmpty()
                 .SetValidator(new UserValidator())
-                .WithName("مدل");
+                .WithName("مدل")
+                .WithMessage("خطا در مدل فرستاده شدخ");
 
 
         }

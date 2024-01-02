@@ -6,7 +6,7 @@ namespace Application.Dto_s.CarDto
 {
     public class AddUpdateCarDto
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public required string Name { get; set; }
         public required string Model { get; set; }
 
@@ -16,6 +16,6 @@ namespace Application.Dto_s.CarDto
 
         public IFormFile? ImageFile { get; set; }
         
-        public bool IsDeleted { get; set; }
+        
     }
 }

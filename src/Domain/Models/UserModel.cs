@@ -6,7 +6,11 @@ namespace Domain.Models
 {
     public class UserModel:BaseModel
     {
-        
+        public UserModel()
+        {
+            Companies = new List<UserCompanyModelJunk>();
+
+        }
         public Guid GenderId { get; set; }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
@@ -25,8 +29,13 @@ namespace Domain.Models
 
         
 
+      
 
+        public GenderModel Gender { get; set; }
 
+        public ICollection<CarModel> Cars { get; set; }
+        
+        public ICollection<UserCompanyModelJunk> Companies { get; set; }
 
 
       

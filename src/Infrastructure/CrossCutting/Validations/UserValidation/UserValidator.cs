@@ -46,6 +46,10 @@ namespace Infrastructure.CrossCutting.Validations.UserValidation
                 .MaximumLength(50)
                 .WithName("ملیت");
 
+            RuleFor(x => x.BirthDate)
+                .NotEmpty()
+                .WithName("تاریخ تولید");
+
 
         }
 

@@ -1,7 +1,6 @@
 ﻿
 
 using Application.Commands;
-using Application.Contracts;
 using Application.Services.Interfaces;
 using MediatR;
 

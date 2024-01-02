@@ -27,7 +27,7 @@ namespace Infrastructure.CrossCutting.Mappings.UserMappings
                 .ForMember(dest => dest.GenderEntityTitle, opt => opt.MapFrom(src => src.GenderId  != Guid.Empty ? src.Gender.Title : ""));
 
 
-
+            CreateMap<GenderEntity,GenderModel>();
 
         }
     }

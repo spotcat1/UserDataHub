@@ -112,7 +112,7 @@ namespace Infrastructure.Repositories
 
             if (!FoundUser)
             {
-                throw new NotFoundException("User", UserId);
+                throw new NotFoundException("کاربر یافت نشد");
             }
 
             return true;

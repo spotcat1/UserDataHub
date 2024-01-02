@@ -11,6 +11,9 @@ namespace Domain.Models
         public bool IsDeleted { get; set; }
 
 
+
+        public UserModel? User { get; set; }
+        public CompanyModel? Company { get; set; }
   
     }
 }

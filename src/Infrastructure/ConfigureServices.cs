@@ -25,6 +25,7 @@ namespace Infrastructure
             ValidatorOptions.Global.LanguageManager = new ValidatorFluentCustomLanguage();
 
             services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<ICarRepository,CarRepository>();
 
             services.AddMediatR(Options =>
             {
